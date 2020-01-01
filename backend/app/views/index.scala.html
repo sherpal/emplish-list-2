@@ -1,0 +1,16 @@
+@import models.DBUser
+
+@(users: List[DBUser])
+
+@main("Welcome to Play") {
+  <h1>Welcome to Play!</h1>
+  @if(users.isEmpty) {
+    <p>There are no users.</p>
+  } else {
+    <ul>
+      @for(user <- users) {
+        <li>@user</li>
+      }
+    </ul>
+  }
+}

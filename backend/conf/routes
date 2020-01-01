@@ -1,0 +1,36 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+# An example controller showing a sample home page
+GET     /                               controllers.HomeController.index
+GET     /api/hello                      controllers.HomeController.hello
+POST    /api/hello/:nbr                 controllers.HomeController.helloNbr(nbr: Int)
+GET     /api/hello/:nbr                 controllers.HomeController.helloNbr(nbr: Int)
+GET     /todo                           controllers.HomeController.todo
+
+# Users
+GET     /api/me                         controllers.UsersController.user
+POST    /api/login                      controllers.UsersController.login
+POST    /api/logout                     controllers.UsersController.logout
+POST    /api/register                   controllers.UsersController.register
+
+# Ingredients
+GET     /api/ingredients/ingredients                controllers.IngredientsController.allIngredients
+GET     /api/ingredients/units                      controllers.IngredientsController.allUnits
+GET     /api/ingredients/stores                     controllers.IngredientsController.allStores
+POST    /api/ingredients/add-ingredient             controllers.IngredientsController.newIngredient
+POST    /api/ingredients/update-ingredient          controllers.IngredientsController.updateIngredientRoute
+
+# Recipes
+GET     /api/recipes/recipes                        controllers.RecipesController.fetchAllRecipes
+GET     /api/recipes/db-recipes                     controllers.RecipesController.fetchAllDBRecipes
+GET     /api/recipes/get                            controllers.RecipesController.fetchRecipeById(recipeId: Int)
+POST    /api/recipes/new-recipe                     controllers.RecipesController.addRecipe
+POST    /api/recipes/update-recipe                  controllers.RecipesController.updateRecipe
+
+# Map static resources from the /public folder to the /assets URL path
+# GET   /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+# Serve static assets under public directory. KEEP THIS ROUTE AT THE END OF THIS FILE.
+GET     /*file                      controllers.HomeController.assetOrDefault(file)
