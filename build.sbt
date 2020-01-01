@@ -9,14 +9,16 @@ scalaVersion := "2.12.10"
 
 scalacOptions ++= Seq(
   "-deprecation",
-  "-feature"
+  "-feature",
+  "-Ywarn-unused:locals"
 )
 
 lazy val `shared` = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .settings(
     SharedSettings(),
-    addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full)
+    addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full)//,
+    //scalacOptions
   )
   .jvmSettings(
     SharedSettings.jvmSettings
