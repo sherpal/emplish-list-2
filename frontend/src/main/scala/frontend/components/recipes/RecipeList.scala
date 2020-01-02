@@ -1,5 +1,6 @@
 package frontend.components.recipes
 
+import models.RecipeSummary
 import models.emplishlist.Recipe
 import models.emplishlist.db.DBRecipe
 import slinky.core.StatelessComponent
@@ -10,7 +11,7 @@ import slinky.web.html._
 
 @react final class RecipeList extends StatelessComponent {
 
-  case class Props(recipes: Vector[Recipe])
+  case class Props(recipes: Vector[RecipeSummary])
 
   def render(): ReactElement = div(
     span(className := "clickable")(Link(to = Recipes.newRecipePath)("New Recipe")),
@@ -22,7 +23,7 @@ import slinky.web.html._
         )
       ),
       tbody(
-        props.recipes.map(Right[DBRecipe, Recipe]).map(r => RecipeRow(r).withKey(r.right.get.name))
+        props.recipes.map(r => RecipeRow(r).withKey(r.name))
       )
     )
   )

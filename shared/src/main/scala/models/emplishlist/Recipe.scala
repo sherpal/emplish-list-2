@@ -1,5 +1,6 @@
 package models.emplishlist
 
+import models.RecipeSummary
 import models.emplishlist.db.{DBRecipe, DBRecipeInfo}
 import models.errors.BackendError
 import models.validators.StringValidators._
@@ -16,7 +17,7 @@ final case class Recipe(
     lastUpdateOn: Long,
     description: String,
     forHowManyPeople: Int
-) {
+) extends RecipeSummary {
   def toDBRecipeInfo: DBRecipeInfo = DBRecipeInfo(
     DBRecipe(uniqueId, name, createdBy, createdOn, lastUpdateBy, lastUpdateOn, description, forHowManyPeople),
     ingredients.map(_.toDBRecipeIngredient(uniqueId))

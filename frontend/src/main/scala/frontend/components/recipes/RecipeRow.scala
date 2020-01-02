@@ -1,7 +1,6 @@
 package frontend.components.recipes
 
-import models.emplishlist.Recipe
-import models.emplishlist.db.DBRecipe
+import models.RecipeSummary
 import org.scalajs.dom
 import slinky.core.StatelessComponent
 import slinky.core.annotations.react
@@ -10,14 +9,13 @@ import slinky.web.html._
 
 @react final class RecipeRow extends StatelessComponent {
 
-  case class Props(recipe: Either[DBRecipe, Recipe])
+  case class Props(recipe: RecipeSummary)
+
+  def recipe: RecipeSummary = props.recipe
 
   case class RowInfo(recipeId: Int, recipeName: String, createdBy: String)
 
-  def rowInfo: RowInfo = props.recipe match {
-    case Left(recipe)  => RowInfo(recipe.uniqueId, recipe.name, recipe.createdBy)
-    case Right(recipe) => RowInfo(recipe.uniqueId, recipe.name, recipe.createdBy)
-  }
+  def rowInfo: RowInfo = RowInfo(recipe.uniqueId, recipe.name, recipe.createdBy)
 
   def goToRecipe(recipeId: Int): Unit = {
     dom.document.location.href = Recipes.recipeViewPath(recipeId)

@@ -1,9 +1,11 @@
 package frontend.components.basket
 
 import frontend.components.helpers.InfoDownloader
+import frontend.utils.basket.BasketLoader
 import io.circe.generic.auto._
 import models.emplishlist.basket.Basket
 import models.emplishlist.{Ingredient, Recipe}
+import org.scalajs.dom
 import slinky.core.Component
 import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
@@ -36,7 +38,23 @@ import scala.concurrent.ExecutionContext.Implicits.global
   lazy val ingredientsDownloader: InfoDownloader[State] = InfoDownloader("ingredients", setState)
   lazy val recipesDownloader: InfoDownloader[State] = InfoDownloader("recipes", setState)
 
+  val savingBasket: dom.Event => Unit = (_: dom.Event) => {
+    BasketLoader.saveBasket(state.basket)
+    dom.window.alert("coucou")
+  }
+
+  override def componentWillUnmount(): Unit = {
+    BasketLoader.saveBasket(state.basket)
+    dom.window.removeEventListener("beforeunload", savingBasket)
+  }
+
   override def componentWillMount(): Unit = {
+
+    dom.window.addEventListener("beforeunload", savingBasket)
+
+    for (basket <- BasketLoader.loadBasket) {
+      setState(_.copy(basket = basket))
+    }
 
     ingredientsDownloader.downloadInfo[Ingredient](
       "ingredients",
@@ -46,10 +64,16 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
   }
 
+  def clearBasket(): Unit = {
+    BasketLoader.clearBasket()
+    setState(_.copy(basket = Basket.empty))
+  }
+
   def render(): ReactElement = maybeRecipesAndIngredients match {
     case Some((recipes, ingredients)) =>
       div(
         h1("Create your basket"),
+        p(button(onClick := clearBasket _, "Clear basket")),
         if (state.finished) FinalList(state.basket.allIngredients, finish(isFinished = false))
         else {
           MakeBasket(

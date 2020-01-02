@@ -11,6 +11,8 @@ final case class IngredientQuantity(ingredient: Ingredient, amount: Double) exte
 
   def *(x: Double): IngredientQuantity = copy(amount = x * amount)
 
+  def +(x: Double): IngredientQuantity = copy(amount = x + amount)
+
   def compare(that: IngredientQuantity): Int = this.ingredient compare that.ingredient
 }
 

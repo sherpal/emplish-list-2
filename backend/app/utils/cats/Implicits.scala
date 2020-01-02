@@ -13,7 +13,7 @@ object Implicits {
 
       io.unsafeRunAsync {
         case Left(throwable) => promise.failure(throwable)
-        case Right(value) => promise.success(value)
+        case Right(value)    => promise.success(value)
       }
 
       promise.future
