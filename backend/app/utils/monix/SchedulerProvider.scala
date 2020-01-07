@@ -12,7 +12,7 @@ trait SchedulerProvider {
 
   val ec: ExecutionContext
 
-  implicit val scheduler: AsyncScheduler = AsyncScheduler(
+  implicit lazy val scheduler: AsyncScheduler = AsyncScheduler(
     Executors.newSingleThreadScheduledExecutor(),
     ec,
     AlwaysAsyncExecution,

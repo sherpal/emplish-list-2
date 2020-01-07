@@ -4,6 +4,7 @@ import frontend.components.basket.BasketBoard
 import frontend.components.header.{GlobalHeader, Navigation}
 import frontend.components.ingredients.{IngredientsBoard, NewIngredient}
 import frontend.components.recipes.{RecipeDisplayContainer, RecipeEditorContainer, Recipes, RecipesBoard}
+import frontend.components.users.AcceptUser
 import frontend.utils.history.DefaultNavigator
 import frontend.utils.http.DefaultHttp._
 import io.circe.generic.auto._
@@ -15,6 +16,7 @@ import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
 import slinky.reactrouter._
 import slinky.web.html._
+import sttp.client._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Success
@@ -22,7 +24,7 @@ import scala.util.Success
 @react final class Main extends Component {
 
   type Props = Unit
-  case class State(maybeUser: Option[User])
+  case class State(maybeUser: Option[User], amIAdmin: Boolean = false)
 
   override def initialState: State = State(None)
 
@@ -41,6 +43,16 @@ import scala.util.Success
 
   override def componentWillMount(): Unit = {
     me()
+
+    boilerplate
+      .get(path("am-i-admin"))
+      .response(ignore)
+      .send()
+      .map(_.is200)
+      .onComplete {
+        case Success(true) => setState(_.copy(amIAdmin = true))
+        case _             =>
+      }
   }
 
   val history: History = DefaultNavigator.history
@@ -49,7 +61,7 @@ import scala.util.Success
     case Some(user) =>
       div(className := "app")(
         GlobalHeader(user),
-        Navigation(),
+        Navigation(state.amIAdmin),
         div(className := "main")(
           Router(history)(
             Route(path = "/ingredients", component = IngredientsBoard),
@@ -57,7 +69,8 @@ import scala.util.Success
             Route(path = "/recipes", component = RecipesBoard, exact = true),
             Route(path = Recipes.editorPath + ":id", component = RecipeEditorContainer),
             Route(path = Recipes.viewRecipePath + ":id", component = RecipeDisplayContainer, exact = true),
-            Route(path = "/basket", component = BasketBoard)
+            Route(path = "/basket", component = BasketBoard),
+            Route(path = "/handle-registration", component = AcceptUser)
           )
         )
       )

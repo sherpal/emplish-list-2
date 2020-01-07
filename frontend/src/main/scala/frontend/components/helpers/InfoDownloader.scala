@@ -20,7 +20,7 @@ trait InfoDownloader[State] {
       implicit aDecoder: io.circe.Decoder[Vector[T]]
   ): RequestT[Identity, Either[Either[circe.Error, Map[String, List[BackendError]]], Either[circe.Error, Vector[T]]], Nothing] =
     boilerplate
-      .get(path(defaultPath, p))
+      .get(if (defaultPath.nonEmpty) path(defaultPath, p) else path(p))
       .response(responseAs[Vector[T]])
 
   private def requestWithParams[R](p: String, params: Map[String, List[String]])(

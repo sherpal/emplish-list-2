@@ -9,16 +9,14 @@ scalaVersion := "2.12.10"
 
 scalacOptions ++= Seq(
   "-deprecation",
-  "-feature",
-  "-Ywarn-unused:locals"
+  "-feature"
 )
 
 lazy val `shared` = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .settings(
     SharedSettings(),
-    addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full)//,
-    //scalacOptions
+    addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full)
   )
   .jvmSettings(
     SharedSettings.jvmSettings
@@ -49,3 +47,11 @@ lazy val `frontend` = (project in file("./frontend"))
 addCommandAlias("dev", ";frontend/fastOptJS::startWebpackDevServer;~frontend/fastOptJS")
 
 addCommandAlias("build", "frontend/fullOptJS::webpack")
+
+stage := {
+//  val fullOptValue = (fullOptJS in frontend).value
+//  println(s"Frontend compiled at $fullOptValue")
+//  val webpackValue = (webpack in frontend).value
+//  println(s"Webpack value $webpackValue")
+  (stage in backend).value
+}

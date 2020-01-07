@@ -16,4 +16,7 @@ final class FullAuthGuardFactory @Inject()(parser: BodyParsers.Default, config: 
     authGuard.andThen(InvalidSessionFilter()).andThen(new UserAction(parser))
 
   def apply(): ActionBuilder[SessionRequest, AnyContent] = guard(new AuthGuard(parser, config))
+
+  def admin: ActionBuilder[SessionRequest, AnyContent] = apply().andThen(AdminSessionFilter())
+
 }

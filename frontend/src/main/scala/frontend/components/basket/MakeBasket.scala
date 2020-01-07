@@ -1,5 +1,6 @@
 package frontend.components.basket
 
+import cats.implicits._
 import frontend.components.helpers.forms.{InputFromString, InputInt}
 import frontend.components.helpers.inputsearch.InputSearch
 import frontend.components.helpers.listform.CustomListForm
@@ -11,7 +12,6 @@ import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
 import slinky.web.html._
 import syntax.FromString
-import cats.implicits._
 
 @react final class MakeBasket extends Component {
 

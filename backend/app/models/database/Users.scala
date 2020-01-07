@@ -6,7 +6,9 @@ import cats.syntax.applicative._
 import models.DBUser
 import monix.eval.Task
 import org.mindrot.jbcrypt.BCrypt
+import utils.config.ConfigRequester.|>
 import utils.database.DBProfile.api._
+import utils.database.tables.UsersTable
 import utils.database.tables.UsersTable.{Password, UserName, hashPassword, query}
 
 trait Users extends MonixDB {
@@ -24,9 +26,12 @@ trait Users extends MonixDB {
 
   def addUser(dBUser: DBUser): Task[Int] = runAsTask(query += dBUser)
 
-  def addUser(userName: UserName, password: Password): Task[Vector[DBUser]] =
+  def addUserPasswordHashed(userName: UserName, hashedPassword: Password): Task[Int] =
     randomUUID
-      .flatMap(uuid => addUser(DBUser(uuid, userName, hashPassword(password))))
+      .flatMap(uuid => addUser(DBUser(uuid, userName, hashedPassword)))
+
+  def addUser(userName: UserName, password: Password): Task[Vector[DBUser]] =
+    addUserPasswordHashed(userName, hashedPassword = UsersTable.hashPassword(password))
       .flatMap(_ => users)
 
   def users: Task[Vector[DBUser]] = runAsTask(query.result).map(_.toVector)
@@ -57,5 +62,14 @@ trait Users extends MonixDB {
         case None         => false.pure[Task]
       }
     } yield done
+
+  def registerAdminIfNotExist: Task[Boolean] =
+    for {
+      userName <- Task.pure(|> >> "adminUser" >> "name").map(_.into[String])
+      adminExists <- userExists(userName)
+      password <- if (!adminExists) Task.pure(|> >> "adminUser" >> "password").map(_.into[String]) else Task.pure("")
+      hashedPassword = if (!adminExists) hashPassword(password) else ""
+      success <- if (!adminExists) addUserPasswordHashed(userName, hashedPassword) else Task.pure(1)
+    } yield success > 0
 
 }

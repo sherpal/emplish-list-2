@@ -1,8 +1,6 @@
 package frontend.components.recipes
 
 import models.RecipeSummary
-import models.emplishlist.Recipe
-import models.emplishlist.db.DBRecipe
 import slinky.core.StatelessComponent
 import slinky.core.annotations.react
 import slinky.core.facade.ReactElement

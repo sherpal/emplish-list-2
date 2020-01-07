@@ -40,7 +40,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
   val savingBasket: dom.Event => Unit = (_: dom.Event) => {
     BasketLoader.saveBasket(state.basket)
-    dom.window.alert("coucou")
   }
 
   override def componentWillUnmount(): Unit = {

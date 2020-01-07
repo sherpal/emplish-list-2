@@ -66,4 +66,9 @@ table, th, td {
 .icon-size {
   height: 15px; }
 
+fieldset {
+  margin: 20px; }
+  fieldset div {
+    margin: 5px; }
+
 /*# sourceMappingURL=index.css.map */

@@ -46,6 +46,7 @@ object NewItemPictogram extends js.Object
     Route(path = "/new-ingredient", component = components.main.Main),
     Route(path = "/recipes", component = components.main.Main),
     Route(path = "/basket", component = components.main.Main),
+    Route(path = "/handle-registration", component = components.main.Main),
     Route(path = "/login", component = Login),
     Route(path = "/sign-up", component = Register),
     Route(path = "/todo-react", component = Todo)

@@ -13,6 +13,9 @@ project/target
 project/project/target
 project/.bloop
 
+frontend/build
+
+backend/conf/secrets.conf
 
 /database
 

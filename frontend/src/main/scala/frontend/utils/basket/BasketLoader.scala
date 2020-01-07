@@ -1,11 +1,11 @@
 package frontend.utils.basket
 
-import models.emplishlist.basket.Basket
-import org.scalajs.dom
 import io.circe.generic.auto._
 import io.circe.parser.decode
 import io.circe.syntax._
+import models.emplishlist.basket.Basket
 import models.emplishlist.{IngredientQuantity, RecipeQuantity}
+import org.scalajs.dom
 import syntax.WithUnit
 
 object BasketLoader {

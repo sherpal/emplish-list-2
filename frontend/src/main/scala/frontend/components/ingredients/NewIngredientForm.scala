@@ -55,7 +55,7 @@ import scala.util.{Failure, Success}
 
   lazy val queue: SourceQueueWithComplete[simpleForm.FormDataChanger] = simpleForm.run()
 
-  val changeName: String => Future[QueueOfferResult] = newName => queue.offer(_.copy(name = newName))
+  val changeName: String => Unit = newName => queue.offer(_.copy(name = newName))
   val changeStores: List[Store] => Future[QueueOfferResult] = stores => queue.offer(_.copy(stores = stores))
   val changeUnit: IngredientUnit => Future[QueueOfferResult] = unit => queue.offer(_.copy(unit = unit))
 

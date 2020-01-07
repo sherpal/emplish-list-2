@@ -86,5 +86,13 @@ table, th, td {
 }
 
 .icon-size {
-    height: 15px
+    height: 15px;
+}
+
+fieldset {
+    margin: 20px;
+
+    div {
+        margin: 5px;
+    }
 }

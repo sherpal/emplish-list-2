@@ -6,7 +6,7 @@ import frontend.components.forms.RegisterForm
 import slinky.core.StatelessComponent
 import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
-import slinky.web.html.{div, h1}
+import slinky.web.html.{a, div, h1, href}
 
 @react final class Register extends StatelessComponent {
 
@@ -21,7 +21,8 @@ import slinky.web.html.{div, h1}
 
   def render(): ReactElement = div(
     h1("Register"),
-    RegisterForm(actorSystem, materializer)
+    RegisterForm(actorSystem, materializer),
+    a(href := "/login")("Login")
   )
 
 }

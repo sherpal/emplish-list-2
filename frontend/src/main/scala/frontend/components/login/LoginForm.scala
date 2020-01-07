@@ -1,8 +1,8 @@
 package frontend.components.login
 
 import akka.actor.ActorSystem
+import akka.stream.Materializer
 import akka.stream.scaladsl.{Sink, SourceQueueWithComplete}
-import akka.stream.{Materializer, QueueOfferResult}
 import frontend.components.forms.SimpleForm
 import frontend.components.helpers.forms.InputString
 import frontend.utils.http.DefaultHttp._
@@ -17,7 +17,7 @@ import slinky.core.facade.ReactElement
 import slinky.web.html._
 import sttp.client.Response
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
 @react final class LoginForm extends Component {
@@ -40,8 +40,8 @@ import scala.util.{Failure, Success}
 
   lazy val queue: SourceQueueWithComplete[simpleForm.FormDataChanger] = simpleForm.run()
 
-  val changeName: String => Future[QueueOfferResult] = newName => queue.offer(_.copy(name = newName))
-  val changePW: String => Future[QueueOfferResult] = newPassword => queue.offer(_.copy(password = newPassword))
+  val changeName: String => Unit = newName => queue.offer(_.copy(name = newName))
+  val changePW: String => Unit = newPassword => queue.offer(_.copy(password = newPassword))
 
   def submit(): Unit = if (state.errors.isEmpty) {
     boilerplate
