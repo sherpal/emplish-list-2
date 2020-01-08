@@ -6,6 +6,7 @@ import io.circe.syntax._
 import models.errors.BackendError
 import sttp.client._
 import sttp.model.{MediaType, MultiQueryParams, Uri}
+import org.scalajs.dom.document
 
 import scala.concurrent.Future
 
@@ -16,7 +17,7 @@ object DefaultHttp extends Http {
   def boilerplate: RequestT[Empty, Either[String, String], Nothing] =
     basicRequest.header("Csrf-Token", "nocheck")
 
-  def host: Uri = uri"http://localhost:8080"
+  def host: Uri = Uri.parse(document.location.origin.toString).right.get //uri"http://localhost:8080"
 
   def path(s: String, ss: String*): Uri = host.path("api", s, ss: _*)
 

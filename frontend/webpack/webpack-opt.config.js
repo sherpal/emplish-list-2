@@ -12,7 +12,8 @@ module.exports = merge(core, {
   devtool: "source-map",
   entry: entries,
   output: {
-    path: path.resolve(__dirname, "../../../../build")
+    path: path.resolve(__dirname, "../../../../../backend/public"),
+    publicPath: "/" // this is added so that a "/" is prepend to the <script src="???">
   },
   plugins: [
     new webpack.DefinePlugin({
