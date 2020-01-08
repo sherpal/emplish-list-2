@@ -49,9 +49,9 @@ addCommandAlias("dev", ";frontend/fastOptJS::startWebpackDevServer;~frontend/fas
 addCommandAlias("build", "frontend/fullOptJS::webpack")
 
 stage := {
-//  val fullOptValue = (fullOptJS in frontend).value
-//  println(s"Frontend compiled at $fullOptValue")
-//  val webpackValue = (webpack in frontend).value
-//  println(s"Webpack value $webpackValue")
+  val webpackValue = (frontend / Compile / fullOptJS / webpack).value
+
+  println(s"Webpack value is $webpackValue")
+
   (stage in backend).value
 }
