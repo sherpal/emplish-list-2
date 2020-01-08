@@ -29,8 +29,6 @@ final class AddAdminInDBIfNotExists @Inject()(
 
   actorSystem.scheduler.scheduleOnce(delay = 3.seconds) {
 
-    println(s"Admin password is ${(utils.config.ConfigRequester.|> >> "adminUser" >> "password").into[String]}")
-
     registerAdminIfNotExist.runToFuture
       .onComplete {
         case Success(_) =>
