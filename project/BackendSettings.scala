@@ -17,7 +17,8 @@ object BackendSettings {
       // BCrypt library for hashing password
       "org.mindrot" % "jbcrypt" % "0.3m",
       // sending emails
-      "javax.mail" % "mail" % "1.4.7"
+      "javax.mail" % "mail" % "1.4.7",
+      "org.postgresql" % "postgresql" % "42.2.5"
     )
     // https://www.playframework.com/documentation/2.7.x/SBTCookbook
     //PlayKeys.playRunHooks += baseDirectory.map(FrontendHook.apply).value

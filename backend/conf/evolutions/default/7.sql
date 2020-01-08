@@ -8,17 +8,17 @@ drop table ingredient;
 drop table "store";
 
 create table ingredient (
-    unique_id INTEGER primary key autoincrement,
-    name varchar(255) unique not null,
-    unit_name varchar(255) references unit (name)
+    unique_id serial primary key,
+    "name" varchar(255) unique not null,
+    unit_name varchar(255) references unit ("name")
 );
 
 create table recipe (
-    unique_id INTEGER primary key autoincrement,
-    name varchar(255) unique not null,
-    created_by varchar(255) references users (name),
+    unique_id serial  primary key,
+    "name" varchar(255) unique not null,
+    created_by varchar(255) references users ("name"),
     created_on INTEGER,
-    last_update_by varchar(255) references users (name),
+    last_update_by varchar(255) references users ("name"),
     last_update_on INTEGER,
     description text not null
 );
@@ -30,8 +30,8 @@ create table ingredient_recipe (
 );
 
 create table "store" (
-    unique_id INTEGER primary key autoincrement,
-    name varchar(255) unique not null
+    unique_id serial  primary key,
+    "name" varchar(255) unique not null
 );
 
 create table ingredients_in_store (

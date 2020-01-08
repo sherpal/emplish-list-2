@@ -1,9 +1,9 @@
 
 -- !Ups
 
-alter table recipe add column created_by varchar(255) references users (name);
+alter table recipe add column created_by varchar(255) references users ("name");
 alter table recipe add column created_on INTEGER;
-alter table recipe add column last_update_by varchar(255) references users (name);
+alter table recipe add column last_update_by varchar(255) references users ("name");
 alter table recipe add column last_update_on INTEGER;
 
 
