@@ -8,3 +8,7 @@ addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.0.0")
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.7.2")
 
 addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.14.0")
+
+addSbtPlugin("com.heroku" % "sbt-heroku" % "2.1.3-SNAPSHOT")
+
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.10")

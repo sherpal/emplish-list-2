@@ -1,4 +1,6 @@
+import com.heroku.sbt.HerokuPlugin.autoImport.{herokuIncludePaths, herokuProcessTypes}
 import sbt.Keys._
+import sbtassembly.MergeStrategy
 import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 
 name := "EmplishList"
@@ -14,6 +16,8 @@ scalacOptions ++= Seq(
 
 lazy val `shared` = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
+  .disablePlugins(HerokuPlugin)
+  .disablePlugins(sbtassembly.AssemblyPlugin)
   .settings(
     SharedSettings(),
     addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full)
@@ -30,13 +34,27 @@ lazy val `backend` = (project in file("./backend"))
   .enablePlugins(PlayScala)
   .settings(
     BackendSettings(),
-    libraryDependencies += guice
+    libraryDependencies += guice,
+    herokuAppName in Compile := "emplish-list",
+    herokuProcessTypes in Compile := Map(
+      "web" -> "target/universal/stage/bin/backend -Dhttp.port=$PORT" //,
+      //"worker" -> "java -jar target/universal/stage/lib/my-worker.jar"
+    ),
+    herokuIncludePaths in Compile := Seq(
+      "backend/app",
+      "backend/conf/routes",
+      "backend/conf/application.conf",
+      "backend/public"
+    ),
+    herokuSkipSubProjects in Compile := false
   )
   .dependsOn(sharedJVM)
 
 /** Frontend will use react with Slinky */
 lazy val `frontend` = (project in file("./frontend"))
+  .disablePlugins(HerokuPlugin)
   .enablePlugins(ScalaJSBundlerPlugin)
+  .disablePlugins(sbtassembly.AssemblyPlugin)
   .settings(FrontendSettings())
   .dependsOn(sharedJS)
 //  .settings( // example library to make http calls
@@ -55,3 +73,17 @@ stage := {
 
   (stage in backend).value
 }
+
+//Compile / deployHeroku := (backend / Compile / deployHeroku).value
+
+assembly := {
+  println((backend / assembly / mainClass).value)
+
+  val v = (backend / assembly).value
+
+  println(v)
+
+  v
+}
+
+logLevel := Level.Debug
