@@ -22,16 +22,6 @@ object BackendSettings {
       "javax.mail" % "mail" % "1.4.7",
       "org.postgresql" % "postgresql" % "42.2.5"
     )
-//    herokuAppName in Compile := "emplish-list",
-//    herokuProcessTypes in Compile := Map(
-//      "web" -> "target/universal/stage/bin/backend -Dhttp.port=$PORT" //,
-//      //"worker" -> "java -jar target/universal/stage/lib/my-worker.jar"
-//    ),
-//    herokuIncludePaths in Compile := Seq(
-//      "app",
-//      "public",
-//      "conf"
-//    )
     // https://www.playframework.com/documentation/2.7.x/SBTCookbook
     //PlayKeys.playRunHooks += baseDirectory.map(FrontendHook.apply).value
   )

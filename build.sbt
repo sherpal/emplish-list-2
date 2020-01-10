@@ -87,3 +87,5 @@ assembly := {
 }
 
 logLevel := Level.Debug
+
+// sbt clean stage backend/deploy
