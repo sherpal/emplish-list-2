@@ -4,7 +4,7 @@ import models.emplishlist.Ingredient
 import slinky.core.Component
 import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
-import slinky.reactrouter.Link
+import router.Link
 import slinky.web.html._
 
 @react final class IngredientList extends Component {
@@ -18,7 +18,7 @@ import slinky.web.html._
 
   def render(): ReactElement = section(
     h1("Ingredients in database"),
-    span(className := "clickable")(Link(to = "/new-ingredient")("New Ingredient")),
+    span(className := "clickable")(Link(to = "/new-ingredient", text = "New Ingredient")),
     table(
       thead(
         tr(

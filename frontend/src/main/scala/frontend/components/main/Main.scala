@@ -14,9 +14,12 @@ import org.scalajs.dom.History
 import slinky.core.Component
 import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
-import slinky.reactrouter._
 import slinky.web.html._
 import sttp.client._
+import urldsl.language.PathSegment.dummyErrorImpl._
+import urldsl.language.QueryParameters.dummyErrorImpl.{empty => noSearch}
+import router._
+import urldsl.vocabulary.UrlMatching
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Success
@@ -63,14 +66,32 @@ import scala.util.Success
         GlobalHeader(user),
         Navigation(state.amIAdmin),
         div(className := "main")(
-          Router(history)(
-            Route(path = "/ingredients", component = IngredientsBoard),
-            Route(path = "/new-ingredient", component = NewIngredient),
-            Route(path = "/recipes", component = RecipesBoard, exact = true),
-            Route(path = Recipes.editorPath + ":id", component = RecipeEditorContainer),
-            Route(path = Recipes.viewRecipePath + ":id", component = RecipeDisplayContainer, exact = true),
-            Route(path = "/basket", component = BasketBoard),
-            Route(path = "/handle-registration", component = AcceptUser)
+//          Router(history)(
+//            Route(path = "/ingredients", component = IngredientsBoard),
+//            Route(path = "/new-ingredient", component = NewIngredient),
+//            Route(path = "/recipes", component = RecipesBoard, exact = true),
+//            Route(path = Recipes.editorPath + ":id", component = RecipeEditorContainer),
+//            Route(path = Recipes.viewRecipePath + ":id", component = RecipeDisplayContainer, exact = true),
+//            Route(path = "/basket", component = BasketBoard),
+//            Route(path = "/handle-registration", component = AcceptUser)
+//          )
+          Routes(
+            Router.router,
+            List(
+              Route((root / "ingredients") ? noSearch, () => IngredientsBoard()),
+              Route((root / "new-ingredient") ? noSearch, () => NewIngredient()),
+              Route((root / "recipes" / endOfSegments) ? noSearch, () => RecipesBoard()),
+              Route(
+                (Recipes.editorPath / (segment[Int] || "new")) ? noSearch,
+                (_: UrlMatching[Either[Int, Unit], Unit]) => RecipeEditorContainer()
+              ),
+              Route(
+                (Recipes.viewRecipePath / segment[Int] / endOfSegments) ? noSearch,
+                (_: UrlMatching[Int, Unit]) => RecipeDisplayContainer()
+              ),
+              Route((root / "basket") ? noSearch, () => BasketBoard()),
+              Route((root / "handle-registration") ? noSearch, () => AcceptUser())
+            )
           )
         )
       )

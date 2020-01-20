@@ -4,7 +4,7 @@ import models.RecipeSummary
 import slinky.core.StatelessComponent
 import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
-import slinky.reactrouter.Link
+import router.Link
 import slinky.web.html._
 
 @react final class RecipeList extends StatelessComponent {
@@ -12,7 +12,7 @@ import slinky.web.html._
   case class Props(recipes: Vector[RecipeSummary])
 
   def render(): ReactElement = div(
-    span(className := "clickable")(Link(to = Recipes.newRecipePath)("New Recipe")),
+    Link(to = Recipes.newRecipePath.createPath(), text = "New Recipe"),
     table(
       thead(
         tr(

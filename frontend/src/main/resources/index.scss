@@ -1,3 +1,5 @@
+$theme-color: #0099ff;
+
 body {
   margin: 0;
   padding: 0;
@@ -19,7 +21,7 @@ body {
 header {
     display: flex;
     justify-content: space-between;
-    background-color: #0099ff;
+    background-color: $theme-color;
     grid-area: header;
     align-items: center;
 }
@@ -74,6 +76,7 @@ table, th, td {
 
 .clickable {
     cursor: pointer;
+    color: $theme-color;
 }
 
 

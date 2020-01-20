@@ -55,7 +55,8 @@ table, th, td {
   cursor: pointer; }
 
 .clickable {
-  cursor: pointer; }
+  cursor: pointer;
+  color: #0099ff; }
 
 .valid {
   border: 2px solid green; }

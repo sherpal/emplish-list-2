@@ -86,6 +86,22 @@ assembly := {
   v
 }
 
-logLevel := Level.Debug
-
 // sbt clean stage backend/deploy
+val writeCommitNumber = taskKey[String]("Writes the commit number in the given file.")
+
+writeCommitNumber := {
+  val gitHash: String = git.gitHeadCommit.value.get
+
+  IO.writeLines(
+    baseDirectory.value / "path" / "to" / "file.json",
+    s"""
+       |{
+       |  gitHash: "$gitHash"
+       |}
+       |""".stripMargin
+      .split("\n")
+      .toList
+  )
+
+  gitHash
+}

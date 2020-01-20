@@ -2,7 +2,7 @@ package frontend.components.recipes
 
 import models.emplishlist.Recipe
 import slinky.core.facade.ReactElement
-import slinky.reactrouter.Link
+import router.Link
 import slinky.web.html._
 
 object RecipeDisplay {
@@ -21,7 +21,7 @@ object RecipeDisplay {
       pre(recipe.description)
     ),
     section(
-      Link(to = Recipes.editRecipePath(recipe.uniqueId))("Edit")
+      Link(to = Recipes.editRecipePath(recipe.uniqueId).createPath(), "Edit")
     )
   )
 

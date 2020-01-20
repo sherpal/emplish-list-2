@@ -7,6 +7,7 @@ import frontend.utils.http.DefaultHttp._
 import io.circe.generic.auto._
 import models.emplishlist.{Ingredient, Recipe}
 import org.scalajs.dom
+import router.Router
 import slinky.core.Component
 import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
@@ -32,7 +33,8 @@ import scala.util.{Success, Try}
   }
 
   def moveToNew(): Unit =
-    dom.document.location.href = Recipes.newRecipePath
+    Router.router.moveTo(Recipes.newRecipePath.createPath())
+//    dom.document.location.href = Recipes.newRecipePath
 
   lazy val downloader: InfoDownloader[State] = InfoDownloader("ingredients", setState)
 
@@ -66,10 +68,14 @@ import scala.util.{Success, Try}
   }
 
   def moveAfterSubmit(maybeRecipeId: Option[Int]): Unit =
-    dom.document.location.href = maybeRecipeId match {
-      case Some(recipeId) => Recipes.recipeViewPath(recipeId)
-      case _              => Recipes.topLevelPath
-    }
+    Router.router.moveTo(maybeRecipeId match {
+      case Some(recipeId) => Recipes.recipeViewPath(recipeId).createPath()
+      case _              => Recipes.topLevelPath.createPath()
+    })
+//    dom.document.location.href = maybeRecipeId match {
+//      case Some(recipeId) => Recipes.recipeViewPath(recipeId)
+//      case _              => Recipes.topLevelPath
+//    }
 
   def render(): ReactElement = state match {
     case State(Right(maybeRecipe), Some(ingredients)) =>

@@ -2,6 +2,7 @@ package frontend.components.recipes
 
 import models.RecipeSummary
 import org.scalajs.dom
+import router.Router
 import slinky.core.StatelessComponent
 import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
@@ -18,7 +19,8 @@ import slinky.web.html._
   def rowInfo: RowInfo = RowInfo(recipe.uniqueId, recipe.name, recipe.createdBy)
 
   def goToRecipe(recipeId: Int): Unit = {
-    dom.document.location.href = Recipes.recipeViewPath(recipeId)
+    Router.router.moveTo(Recipes.recipeViewPath(recipeId).createPath())
+//    dom.document.location.href = Recipes.recipeViewPath(recipeId)
   }
 
   def render(): ReactElement =
