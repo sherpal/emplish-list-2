@@ -12,13 +12,14 @@ import slinky.core.Component
 import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
 import slinky.web.html.div
+import urldsl.language.PathSegment.dummyErrorImpl._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Success, Try}
 
 @react final class RecipeEditorContainer extends Component {
 
-  type Props = Unit
+  case class Props(idOrNew: Option[Int])
 
   case class State(editedRecipe: Either[String, Option[Recipe]], existingIngredients: Option[Vector[Ingredient]])
 
@@ -33,19 +34,19 @@ import scala.util.{Success, Try}
   }
 
   def moveToNew(): Unit =
-    Router.router.moveTo(Recipes.newRecipePath.createPath())
+    Router.router.moveTo("/" + Recipes.newRecipePath.createPath())
 //    dom.document.location.href = Recipes.newRecipePath
 
   lazy val downloader: InfoDownloader[State] = InfoDownloader("ingredients", setState)
+
+  def isNew: Boolean = props.idOrNew.isEmpty
 
   override def componentDidMount(): Unit = {
     downloader.downloadInfo[Ingredient]("ingredients", ingredients => _.copy(existingIngredients = Some(ingredients)))
 
     (for {
-      lastSegment <- Future.successful(dom.window.location.pathname.split("/").last)
-      isNew = lastSegment == "new"
-      idAsString <- Future.successful(Try(lastSegment.toInt).toOption)
-      maybeExistingRecipe <- idAsString
+      maybeId <- Future.successful(props.idOrNew)
+      maybeExistingRecipe <- maybeId
         .map(
           id =>
             boilerplate

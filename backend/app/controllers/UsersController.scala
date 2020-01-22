@@ -105,7 +105,7 @@ final class UsersController @Inject()(
     implicit request =>
       registrationEmail(userName, randomKey).map {
         case Some(email) => Ok(email)
-        case None        => BadRequest
+        case None        => BadRequest("The given userName and randomKey are not in pending registration.")
       }.runToFuture
   }
 

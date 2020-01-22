@@ -12,7 +12,7 @@ import slinky.web.html._
   case class Props(recipes: Vector[RecipeSummary])
 
   def render(): ReactElement = div(
-    Link(to = Recipes.newRecipePath.createPath(), text = "New Recipe"),
+    Link(to = "/" + Recipes.newRecipePath.createPath(), text = "New Recipe"),
     table(
       thead(
         tr(

@@ -18,12 +18,10 @@ import scala.util.{Failure, Success}
 
 @react final class AcceptUser extends Component {
 
-  type Props = Unit
+  case class Props(registrationUserName: Option[String], registrationKey: Option[String])
 
   case class State(
       adminVerified: Boolean = false,
-      registrationKey: Option[String] = None,
-      registrationUserName: Option[String] = None,
       email: Option[String] = None,
       pendingRegistrationsToDisplay: Option[List[PendingRegistration]] = None
   )
@@ -57,28 +55,9 @@ import scala.util.{Failure, Success}
 
     try {
 
-      val queryParams = dom.window.location.search
-
-      val paramsWithoutQuestionMark = queryParams match {
-        case "" => ""
-        case _  => queryParams.tail
-      }
-      val keyPairsArguments = paramsWithoutQuestionMark
-        .split("&")
-        .filter(_.nonEmpty)
-        .map(_.split("="))
-        .map(_.map(URLDecoder.decode(_, "utf-8")))
-        .map(arr => arr(0) -> arr(1))
-        .groupBy(_._1)
-        .mapValues(_.map(_._2).toList)
-      val maybeUserName = keyPairsArguments.get("userName").flatMap(_.headOption)
-      val maybeRandomKey = keyPairsArguments.get("randomKey").flatMap(_.headOption)
-
-      setState(_.copy(registrationUserName = maybeUserName, registrationKey = maybeRandomKey))
-
       for {
-        userName <- maybeUserName
-        randomKey <- maybeRandomKey
+        userName <- props.registrationUserName
+        randomKey <- props.registrationKey
       } yield
         boilerplate
           .get(
@@ -140,7 +119,7 @@ import scala.util.{Failure, Success}
   def render(): ReactElement =
     if (state.adminVerified)
       div(
-        (state.registrationUserName, state.registrationKey, state.email) match {
+        (props.registrationUserName, props.registrationKey, state.email) match {
           case (Some(userName), Some(randomKey), Some(email)) =>
             div(
               h1("New registration"),
