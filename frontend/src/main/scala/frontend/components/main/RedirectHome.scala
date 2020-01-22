@@ -11,7 +11,6 @@ import slinky.web.html.div
   type Props = Unit
 
   override def componentWillMount(): Unit = {
-    println("hello")
     Router.router.moveTo("/home")
   }
 

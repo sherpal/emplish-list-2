@@ -12,6 +12,7 @@ import urldsl.errors.DummyError
 import urldsl.language.{PathSegment, PathSegmentWithQueryParams}
 import urldsl.vocabulary.{PathMatchOutput, Segment, UrlMatching}
 import components.main.{Main => MainDashboard}
+import frontend.laminarcomponents.Test
 import org.scalajs.dom
 import slinky.web.html._
 import urldsl.url.UrlStringParserGenerator
@@ -101,5 +102,7 @@ object NewItemPictogram extends js.Object
       )
     )
   )
+
+  Test
 
 }
