@@ -7,28 +7,31 @@ import org.scalajs.dom.html
 object InputSearch {
 
   def apply[T](
-      values: EventBus[T],
+      values: Var[T],
       elements: List[T],
       filter: T => T => Boolean,
       decoder: String => T,
-      printer: T => String = (_: T).toString,
+      printer: T => String,
       isValid: Option[T => Boolean] = None
   ): ReactiveHtmlElement[html.Span] = {
-    val filteredElements = values.events.map(filter).map(elements.filter)
+    val filteredElements = values.signal.map(filter).map(elements.filter)
 
     val idString = java.util.UUID.randomUUID().toString
 
+    val inputValidClass =
+      values.signal.map(t => isValid.map(_(t))).map(_.map(if (_) "valid" else "invalid").getOrElse(""))
+
     span(
       input(
-        className <-- values.events.map(t => isValid.map(_(t))).map(_.map(if (_) "valid" else "invalid").getOrElse("")),
+        className <-- inputValidClass,
         tpe := "text",
-        value <-- values.events.map(printer),
+        value <-- values.signal.map(printer),
         inContext(thisNode => onInput.mapTo(thisNode.ref.value).map(decoder) --> values.writer),
         listId := idString // link to the dataList below
       ),
       dataList(
         id := idString,
-        children <-- filteredElements.map(_.take(5).map(printer).map(value := _).map(option(_)))
+        children <-- filteredElements.map(_.take(100).map(printer).map(value := _).map(option(_)))
       )
     )
 

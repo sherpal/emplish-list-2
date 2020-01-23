@@ -57,10 +57,6 @@ lazy val `frontend` = (project in file("./frontend"))
   .disablePlugins(sbtassembly.AssemblyPlugin)
   .settings(FrontendSettings())
   .dependsOn(sharedJS)
-//  .settings( // example library to make http calls
-//    resolvers += Resolver.bintrayRepo("hmil", "maven"),
-//    libraryDependencies += "fr.hmil" %%% "roshttp" % "2.2.4"
-//  )
 
 addCommandAlias("dev", ";frontend/fastOptJS::startWebpackDevServer;~frontend/fastOptJS")
 
@@ -73,35 +69,4 @@ stage := {
 
   (stage in backend).value
 }
-
 //Compile / deployHeroku := (backend / Compile / deployHeroku).value
-
-assembly := {
-  println((backend / assembly / mainClass).value)
-
-  val v = (backend / assembly).value
-
-  println(v)
-
-  v
-}
-
-// sbt clean stage backend/deploy
-val writeCommitNumber = taskKey[String]("Writes the commit number in the given file.")
-
-writeCommitNumber := {
-  val gitHash: String = git.gitHeadCommit.value.get
-
-  IO.writeLines(
-    baseDirectory.value / "path" / "to" / "file.json",
-    s"""
-       |{
-       |  gitHash: "$gitHash"
-       |}
-       |""".stripMargin
-      .split("\n")
-      .toList
-  )
-
-  gitHash
-}

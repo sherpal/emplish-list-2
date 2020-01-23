@@ -11,7 +11,8 @@ object SharedSettings {
       "io.monix" %%% "monix" % "3.1.0",
       "com.softwaremill.sttp.client" %%% "core" % "2.0.0-RC1",
       "org.typelevel" %%% "cats-core" % "2.0.0",
-      "be.doeraene" %%% "url-dsl" % "0.1.3c"
+      "be.doeraene" %%% "url-dsl" % "0.1.3c",
+      "org.scalatest" %%% "scalatest" % "3.1.0" % "test"
     ) ++ Seq(
       "io.circe" %%% "circe-core",
       "io.circe" %%% "circe-generic",

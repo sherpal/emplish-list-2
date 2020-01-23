@@ -22,7 +22,7 @@ object Test {
       User("jean-paul")
     )
 
-    val values = new EventBus[User]()
+    val values = Var[User](User(""))
 
     render(
       d,

@@ -6,13 +6,15 @@ import org.scalajs.dom
 import urldsl.language.PathSegment
 
 final class Route[Ref <: dom.Element, T] private (
-    matcher: Url => Option[T],
+    val matcher: Url => Option[T],
     renderer: T => ReactiveElement[Ref]
 ) {
 
   def render(url: Url): Option[ReactiveElement[Ref]] = {
     matcher(url).map(renderer)
   }
+
+  def maybeMakeRenderer(url: Url): Option[() => ReactiveElement[Ref]] = matcher(url).map(t => () => renderer(t))
 
 }
 
@@ -26,7 +28,7 @@ object Route {
 
   def apply[Ref <: dom.Element](
       pathSegment: PathSegment[Unit, _],
-      renderer: => ReactiveElement[Ref]
-  ): Route[Ref, Unit] = apply(pathSegment, (_: Unit) => renderer)
+      renderer: () => ReactiveElement[Ref]
+  ): Route[Ref, Unit] = apply(pathSegment, (_: Unit) => renderer())
 
 }

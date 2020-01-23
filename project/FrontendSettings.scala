@@ -38,6 +38,8 @@ object FrontendSettings {
     // akka
     libraryDependencies += "org.akka-js" %%% "akkajsactor" % "1.2.5.23",
     libraryDependencies += "org.akka-js" %%% "akkajsactorstream" % "1.2.5.23",
+    libraryDependencies += "org.akka-js" %%% "akkajstestkit" % "2.2.6.1" % "test",
+    libraryDependencies += "org.akka-js" %%% "akkajsstreamtestkit" % "2.2.6.1" % "test",
     // laminar
     libraryDependencies += "com.raquo" %%% "laminar" % "0.7.2",
     scalaJSLinkerConfig in (Compile, fullOptJS) ~= { _.withClosureCompiler(false) }

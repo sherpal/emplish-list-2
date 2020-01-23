@@ -36,26 +36,30 @@ object MainBoard {
     )
 
     val element = div(
-      child <-- me.collect { case Some(user) => user }.combineWith(amIAdmin).map {
-        case (user, admin) =>
-          div(
-            className := "app",
-            GlobalHeader(user),
-            Navigation(admin),
+      child <-- me
+        .collect { case Some(user) => user }
+        .combineWith(amIAdmin)
+        .map {
+          case (user, admin) =>
             div(
-              className := "main",
-              children <-- Routes(
-                Route(root / "ingredients", div()), // todo
-                // new-ingredient route
-                // recipe route
-                // recipe editor container route
-                // recipe display container route
-                Route(root / "basket", BasketBoard())
-                // handle registration route
+              className := "app",
+              GlobalHeader(user),
+              Navigation(admin),
+              div(
+                className := "main",
+                div("Welcome to the main board"),
+                children <-- Routes(
+                  Route(root / "ingredients", () => div()), // todo
+                  // new-ingredient route
+                  // recipe route
+                  // recipe editor container route
+                  // recipe display container route
+                  Route(root / "basket", () => BasketBoard())
+                  // handle registration route
+                )
               )
             )
-          )
-      }
+        }
     )
 
     // go back to login if not connected

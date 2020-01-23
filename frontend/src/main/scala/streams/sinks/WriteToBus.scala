@@ -9,7 +9,10 @@ import scala.concurrent.Future
 object WriteToBus {
 
   private[sinks] def apply[In](writeBus: WriteBus[In]): Sink[In, Future[Done]] =
-    Sink.foreach((in: In) => writeBus.onNext(in))
+    Sink.foreach((in: In) => {
+      println("writring to bus: " + in)
+      writeBus.onNext(in)
+    })
 
   implicit final class SinkEnhanced(sink: Sink.type) {
 
