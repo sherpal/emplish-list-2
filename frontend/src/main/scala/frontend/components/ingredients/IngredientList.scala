@@ -1,10 +1,10 @@
 package frontend.components.ingredients
 
 import models.emplishlist.Ingredient
+import router.Link
 import slinky.core.Component
 import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
-import router.Link
 import slinky.web.html._
 
 @react final class IngredientList extends Component {

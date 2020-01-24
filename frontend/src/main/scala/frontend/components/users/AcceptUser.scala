@@ -1,7 +1,5 @@
 package frontend.components.users
 
-import java.net.URLDecoder
-
 import frontend.components.helpers.tables.Table
 import frontend.utils.http.DefaultHttp._
 import io.circe.generic.auto._

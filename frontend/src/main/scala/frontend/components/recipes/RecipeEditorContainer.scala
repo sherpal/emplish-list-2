@@ -6,16 +6,14 @@ import frontend.components.helpers.InfoDownloader
 import frontend.utils.http.DefaultHttp._
 import io.circe.generic.auto._
 import models.emplishlist.{Ingredient, Recipe}
-import org.scalajs.dom
 import router.Router
 import slinky.core.Component
 import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
 import slinky.web.html.div
-import urldsl.language.PathSegment.dummyErrorImpl._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Success, Try}
+import scala.util.Success
 
 @react final class RecipeEditorContainer extends Component {
 

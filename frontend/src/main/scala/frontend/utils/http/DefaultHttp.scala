@@ -4,9 +4,9 @@ import io.circe._
 import io.circe.parser._
 import io.circe.syntax._
 import models.errors.BackendError
+import org.scalajs.dom.document
 import sttp.client._
 import sttp.model.{MediaType, MultiQueryParams, Uri}
-import org.scalajs.dom.document
 
 import scala.concurrent.Future
 

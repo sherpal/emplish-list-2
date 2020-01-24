@@ -1,8 +1,8 @@
 package frontend.components.recipes
 
 import models.emplishlist.Recipe
-import slinky.core.facade.ReactElement
 import router.Link
+import slinky.core.facade.ReactElement
 import slinky.web.html._
 
 object RecipeDisplay {

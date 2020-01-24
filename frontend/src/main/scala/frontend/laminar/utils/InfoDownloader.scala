@@ -1,11 +1,10 @@
 package frontend.laminar.utils
 
 import com.raquo.airstream.eventstream.EventStream
-import frontend.utils.http.DefaultHttp.{boilerplate, path, pathWithMultipleParams, responseAs}
+import frontend.utils.http.DefaultHttp.{boilerplate, path, pathWithMultipleParams, responseAs, _}
 import io.circe
 import models.errors.BackendError
 import sttp.client.{Identity, RequestT}
-import frontend.utils.http.DefaultHttp._
 import urldsl.language.QueryParameters
 
 import scala.concurrent.ExecutionContext

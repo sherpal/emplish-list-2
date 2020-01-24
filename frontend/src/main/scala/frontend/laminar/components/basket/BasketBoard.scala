@@ -5,11 +5,11 @@ import com.raquo.laminar.lifecycle.{NodeDidMount, NodeWasDiscarded, NodeWillUnmo
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.utils.InfoDownloader
 import frontend.utils.basket.BasketLoader
-import models.emplishlist.{Ingredient, Recipe}
+import io.circe.generic.auto._
 import models.emplishlist.basket.Basket
+import models.emplishlist.{Ingredient, Recipe}
 import org.scalajs.dom
 import org.scalajs.dom.html
-import io.circe.generic.auto._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 

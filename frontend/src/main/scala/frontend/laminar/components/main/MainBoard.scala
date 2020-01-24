@@ -1,18 +1,18 @@
 package frontend.laminar.components.main
 
-import frontend.utils.http.DefaultHttp._
-import io.circe.generic.auto._
-import sttp.client._
-import urldsl.language.PathSegment.dummyErrorImpl._
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.components.basket.BasketBoard
 import frontend.laminar.components.headers.{GlobalHeader, Navigation}
 import frontend.laminar.router.{Route, Router, Routes}
+import frontend.utils.http.DefaultHttp._
+import io.circe.generic.auto._
 import models.users.User
 import org.scalajs.dom.html
+import sttp.client._
+import urldsl.language.PathSegment.dummyErrorImpl._
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object MainBoard {
 

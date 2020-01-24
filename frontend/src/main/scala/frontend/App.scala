@@ -1,21 +1,18 @@
 package frontend
 
 import frontend.components.login.{Login, Register}
-import frontend.components.main.{RedirectHome, Todo}
+import frontend.components.main.{RedirectHome, Main => MainDashboard}
+import frontend.laminarcomponents.Test
 import frontend.utils.history.DefaultNavigator
 import org.scalajs.dom.History
 import router.{Link, Route, Router, Routes}
 import slinky.core._
 import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
+import slinky.web.html._
 import urldsl.errors.DummyError
 import urldsl.language.{PathSegment, PathSegmentWithQueryParams}
-import urldsl.vocabulary.{PathMatchOutput, Segment, UrlMatching}
-import components.main.{Main => MainDashboard}
-import frontend.laminarcomponents.Test
-import org.scalajs.dom
-import slinky.web.html._
-import urldsl.url.UrlStringParserGenerator
+import urldsl.vocabulary.{PathMatchOutput, Segment}
 
 import scala.language.implicitConversions
 //import slinky.reactrouter._

@@ -4,8 +4,8 @@ import com.raquo.airstream.signal.{StrictSignal, Var}
 import org.scalajs.dom
 import org.scalajs.dom.raw.PopStateEvent
 
-import scala.scalajs.js.timers.setTimeout
 import scala.concurrent.duration._
+import scala.scalajs.js.timers.setTimeout
 
 final class Router private () {
 

@@ -11,15 +11,14 @@ import io.circe.generic.auto._
 import models.users.User
 import org.scalajs.dom
 import org.scalajs.dom.History
+import router._
 import slinky.core.Component
 import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
 import slinky.web.html._
 import sttp.client._
 import urldsl.language.PathSegment.dummyErrorImpl._
-import urldsl.language.QueryParameters.dummyErrorImpl.{param => qParam}
-import urldsl.language.QueryParameters.dummyErrorImpl.{empty => noSearch}
-import router._
+import urldsl.language.QueryParameters.dummyErrorImpl.{empty => noSearch, param => qParam}
 import urldsl.vocabulary.UrlMatching
 
 import scala.concurrent.ExecutionContext.Implicits.global

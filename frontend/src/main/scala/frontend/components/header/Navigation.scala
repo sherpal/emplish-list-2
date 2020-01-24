@@ -1,9 +1,9 @@
 package frontend.components.header
 
+import router.Link
 import slinky.core.StatelessComponent
 import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
-import router.Link
 import slinky.web.html._
 
 @react final class Navigation extends StatelessComponent {

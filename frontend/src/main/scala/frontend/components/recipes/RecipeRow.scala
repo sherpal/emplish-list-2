@@ -1,7 +1,6 @@
 package frontend.components.recipes
 
 import models.RecipeSummary
-import org.scalajs.dom
 import router.Router
 import slinky.core.StatelessComponent
 import slinky.core.annotations.react

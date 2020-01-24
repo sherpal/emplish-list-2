@@ -1,23 +1,19 @@
 package frontend.laminar.components.login
 
-import akka.actor.ActorSystem
-import frontend.laminar.utils.ActorSystemContainer
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.components.forms.SimpleForm
 import frontend.laminar.components.helpers.forms.InputString
 import frontend.laminar.router.Router
-import frontend.utils.http.DefaultHttp.{boilerplate, path}
+import frontend.laminar.utils.ActorSystemContainer
+import frontend.utils.http.DefaultHttp.{boilerplate, path, _}
+import io.circe.generic.auto._
 import models.errors.BackendError
 import models.users.LoginUser
-import org.scalajs.dom
 import org.scalajs.dom.html.Form
 import sttp.client.Response
 import syntax.WithUnit
-import io.circe.generic.auto._
-import frontend.utils.http.DefaultHttp._
 
-import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
 private[login] object LoginForm {

@@ -3,12 +3,12 @@ package frontend.laminar.components.forms
 import akka.NotUsed
 import akka.stream.Materializer
 import akka.stream.scaladsl.{RunnableGraph, Sink, Source}
-import streams.sinks.WriteToBus._
-import streams.sources.ReadFromEventStream._
 import com.raquo.airstream.eventbus.WriteBus
 import com.raquo.airstream.eventstream.EventStream
 import models.errors.BackendError
 import models.validators.FieldsValidator
+import streams.sinks.WriteToBus._
+import streams.sources.ReadFromEventStream._
 import syntax.WithUnit
 
 import scala.concurrent.duration._

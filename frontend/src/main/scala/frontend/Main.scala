@@ -3,7 +3,6 @@ package frontend
 import cats.effect.{ExitCode, IO}
 import org.scalajs.dom
 import slinky.hot
-import slinky.web.ReactDOM
 
 import scala.scalajs.js.annotation.{JSExportTopLevel, JSImport}
 import scala.scalajs.{LinkingInfo, js}
