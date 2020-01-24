@@ -2,8 +2,10 @@ package frontend.laminar.components.main
 
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
+import frontend.laminar.components.Component
 import frontend.laminar.components.basket.BasketBoard
 import frontend.laminar.components.headers.{GlobalHeader, Navigation}
+import frontend.laminar.components.ingredients.IngredientBoard
 import frontend.laminar.router.{Route, Router, Routes}
 import frontend.utils.http.DefaultHttp._
 import io.circe.generic.auto._
@@ -14,26 +16,26 @@ import urldsl.language.PathSegment.dummyErrorImpl._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-object MainBoard {
+final class MainBoard private () extends Component[html.Div] {
 
-  def apply(): ReactiveHtmlElement[html.Div] = {
+  private def me = EventStream.fromFuture(
+    boilerplate
+      .get(path("me"))
+      .response(responseAs[User])
+      .send()
+      .map(_.body)
+      .map(_.toOption.flatMap(_.toOption))
+  )
 
-    def me = EventStream.fromFuture(
-      boilerplate
-        .get(path("me"))
-        .response(responseAs[User])
-        .send()
-        .map(_.body)
-        .map(_.toOption.flatMap(_.toOption))
-    )
+  private def amIAdmin = EventStream.fromFuture(
+    boilerplate
+      .get(path("am-i-admin"))
+      .response(ignore)
+      .send()
+      .map(_.is200)
+  )
 
-    def amIAdmin = EventStream.fromFuture(
-      boilerplate
-        .get(path("am-i-admin"))
-        .response(ignore)
-        .send()
-        .map(_.is200)
-    )
+  val element: ReactiveHtmlElement[html.Div] = {
 
     val element = div(
       child <-- me
@@ -49,7 +51,7 @@ object MainBoard {
                 className := "main",
                 div("Welcome to the main board"),
                 children <-- Routes(
-                  Route(root / "ingredients", () => div()), // todo
+                  Route(root / "ingredients", () => IngredientBoard()),
                   // new-ingredient route
                   // recipe route
                   // recipe editor container route
@@ -67,5 +69,11 @@ object MainBoard {
 
     element
   }
+
+}
+
+object MainBoard {
+
+  def apply() = new MainBoard()
 
 }

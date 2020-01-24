@@ -1,7 +1,9 @@
 package frontend.laminar.components.login
 
+import akka.actor.ActorSystem
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
+import frontend.laminar.components.Component
 import frontend.laminar.components.forms.SimpleForm
 import frontend.laminar.components.helpers.forms.InputString
 import frontend.laminar.router.Router
@@ -10,47 +12,37 @@ import frontend.utils.http.DefaultHttp.{boilerplate, path, _}
 import io.circe.generic.auto._
 import models.errors.BackendError
 import models.users.LoginUser
+import models.validators.FieldsValidator
 import org.scalajs.dom.html.Form
 import sttp.client.Response
 import syntax.WithUnit
 
 import scala.util.{Failure, Success}
 
-private[login] object LoginForm {
+private[login] final class LoginForm(val validator: FieldsValidator[LoginUser, BackendError])(
+    implicit val actorSystem: ActorSystem,
+    val formDataWithUnit: WithUnit[LoginUser]
+) extends Component[Form]
+    with SimpleForm[LoginUser] {
 
-  def apply()(implicit actorSystemContainer: ActorSystemContainer): ReactiveHtmlElement[Form] = {
+  val wrongCredentials: Var[Boolean] = Var[Boolean](false)
 
-    implicit val owner: Owner = new Owner {}
+  val element: ReactiveHtmlElement[Form] = {
 
-    import actorSystemContainer._
+    val $changeName = createFormDataChanger((name: String) => _.copy(name = name))
+    val $changePW = createFormDataChanger((password: String) => _.copy(password = password))
 
-    val loginInfo = Var[LoginUser](implicitly[WithUnit[LoginUser]].unit)
-    val errors = new EventBus[Map[String, List[BackendError]]]()
-    val wrongCredentials = Var[Boolean](false)
-    val loginInfoBus = new EventBus[LoginUser]()
-    loginInfoBus.events.foreach(login => loginInfo.update(_ => login))
-
-    val loginUserChangerBus = new EventBus[LoginUser => LoginUser]()
-    val $changeName = loginUserChangerBus.writer.contramapWriter((name: String) => _.copy(name = name))
-    val $changePW = loginUserChangerBus.writer.contramapWriter((password: String) => _.copy(password = password))
-
-    val simpleForm: SimpleForm[LoginUser] = new SimpleForm[LoginUser](
-      loginUserChangerBus.events,
-      loginInfoBus.writer,
-      Some(errors.writer),
-      LoginUser.validator
-    )
-    simpleForm.run()
+    run()
 
     def submit(): Unit = {
       println("Submit!")
 
-      val errorsNow = simpleForm.validator(loginInfo.now)
+      val errorsNow = validator(formData.now)
 
       if (errorsNow.isEmpty) {
         boilerplate
           .post(path("login"))
-          .body(loginInfo.now)
+          .body(formData.now)
           .send()
           .onComplete {
             case Success(Response(Right(_), _, _, _, _)) =>
@@ -68,11 +60,22 @@ private[login] object LoginForm {
 
     form(
       onSubmit.preventDefault --> (_ => submit()),
-      InputString("Name ", loginInfo.signal.map(_.name), $changeName),
-      InputPassword("Password ", $changePW, errors.events),
+      InputString("Name ", formData.signal.map(_.name), $changeName),
+      InputPassword("Password ", $changePW, $errors),
       child <-- wrongCredentials.signal.map(if (_) div("Incorrect username and/or password") else div()),
       input(tpe := "submit", value := "Log in")
     )
+  }
+
+}
+
+object LoginForm {
+
+  def apply(
+      validator: FieldsValidator[LoginUser, BackendError] = LoginUser.validator
+  )(implicit actorSystemContainer: ActorSystemContainer, formDataWithUnit: WithUnit[LoginUser]): LoginForm = {
+    import actorSystemContainer.actorSystem
+    new LoginForm(validator)
   }
 
 }
