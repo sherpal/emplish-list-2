@@ -1,7 +1,7 @@
 package streams.sources
 
 import akka.NotUsed
-import akka.stream.{Attributes, Outlet, OverflowStrategy, SourceShape}
+import akka.stream.{Attributes, Outlet, SourceShape}
 import akka.stream.scaladsl.Source
 import akka.stream.stage.{GraphStage, GraphStageLogic, OutHandler}
 import com.raquo.airstream.eventstream.EventStream
@@ -24,9 +24,7 @@ object ReadFromEventStream {
 
       def inHandlerLike(element: Out): Unit = {
         accumulated.enqueue(element)
-        println("received an element: " + element)
         if (downstreamWaiting) {
-          println("pushing")
           val elem = accumulated.dequeue()
           push(outlet, elem)
           downstreamWaiting = false
@@ -39,12 +37,9 @@ object ReadFromEventStream {
         outlet,
         new OutHandler {
           def onPull(): Unit = {
-            println("coucou")
             if (accumulated.isEmpty) {
-              println("accumulated was empty")
               downstreamWaiting = true
             } else {
-              println("accumulated was not empty")
               val elem = accumulated.dequeue()
               push(outlet, elem)
             }

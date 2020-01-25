@@ -5,7 +5,7 @@ import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.components.Component
 import frontend.laminar.components.basket.BasketBoard
 import frontend.laminar.components.headers.{GlobalHeader, Navigation}
-import frontend.laminar.components.ingredients.IngredientBoard
+import frontend.laminar.components.ingredients.{IngredientBoard, NewIngredient}
 import frontend.laminar.router.{Route, Router, Routes}
 import frontend.utils.http.DefaultHttp._
 import io.circe.generic.auto._
@@ -52,7 +52,7 @@ final class MainBoard private () extends Component[html.Div] {
                 div("Welcome to the main board"),
                 children <-- Routes(
                   Route(root / "ingredients", () => IngredientBoard()),
-                  // new-ingredient route
+                  Route(root / "new-ingredient", () => NewIngredient()),
                   // recipe route
                   // recipe editor container route
                   // recipe display container route

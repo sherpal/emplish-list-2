@@ -30,7 +30,7 @@ trait SimpleForm[FormData] {
   formDataBus.events.foreach(data => formData.update(_ => data))
   private val errors = new EventBus[Map[String, List[BackendError]]]()
   val $errors: EventStream[Map[String, List[BackendError]]] = errors.events // expose to kids
-  val errorsWriter: WriteBus[Map[String, List[BackendError]]] = errors.writer
+  val errorsWriter: WriteBus[Map[String, List[BackendError]]] = errors.writer // expose to kids
 
   private val formDataChanger: EventBus[FormDataChanger] = new EventBus[FormDataChanger]()
   private val formDataChangerWriter: WriteBus[FormDataChanger] = formDataChanger.writer
@@ -42,12 +42,11 @@ trait SimpleForm[FormData] {
     formDataChangerWriter.contramapWriter(f)
 
   private val formDataEventWriter: WriteBus[FormData] = formDataBus.writer
-  private val errorsEventWriter: WriteBus[Map[String, List[BackendError]]] = errors.writer
 
   val validator: FieldsValidator[FormData, BackendError]
 
   private val formDataSink = Sink.writeToBus(formDataEventWriter)
-  private val errorsSink = Sink.foreach(errorsEventWriter.onNext)
+  private val errorsSink = Sink.foreach(errorsWriter.onNext)
 
   private val formSource: RunnableGraph[NotUsed] = Source
     .readFromEventStream(formDataChanger.events)
@@ -57,8 +56,12 @@ trait SimpleForm[FormData] {
     .groupedWithin(10, 200.milliseconds)
     .map(_.last)
     .map(validator.validate)
+    .wireTap(errors => println(s"The errors pass: ${errors.size} errors"))
     .to(errorsSink)
 
   def run(): Unit = formSource.run()
+
+  def clearForm(): Unit =
+    formDataChangerWriter.onNext(_ => formDataWithUnit.unit)
 
 }
