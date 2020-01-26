@@ -2,10 +2,12 @@ package frontend.laminar.components.main
 
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
+import frontend.components.recipes.Recipes
 import frontend.laminar.components.Component
 import frontend.laminar.components.basket.BasketBoard
 import frontend.laminar.components.headers.{GlobalHeader, Navigation}
 import frontend.laminar.components.ingredients.{IngredientBoard, NewIngredient}
+import frontend.laminar.components.recipes.{RecipeBoard, RecipeEditorContainer}
 import frontend.laminar.router.{Route, Router, Routes}
 import frontend.utils.http.DefaultHttp._
 import io.circe.generic.auto._
@@ -49,12 +51,15 @@ final class MainBoard private () extends Component[html.Div] {
               Navigation(admin),
               div(
                 className := "main",
-                div("Welcome to the main board"),
                 children <-- Routes(
+                  Route(root / "home" / endOfSegments, () => div(h1("Welcome to Emplish List!"))),
                   Route(root / "ingredients", () => IngredientBoard()),
                   Route(root / "new-ingredient", () => NewIngredient()),
-                  // recipe route
-                  // recipe editor container route
+                  Route(Recipes.topLevelPath / endOfSegments, () => RecipeBoard()),
+                  Route(
+                    Recipes.editorPath / (segment[Int] || "new"),
+                    (recipeIdOrNew: Either[Int, Unit]) => RecipeEditorContainer(recipeIdOrNew.swap.toOption)
+                  ),
                   // recipe display container route
                   Route(root / "basket", () => BasketBoard())
                   // handle registration route

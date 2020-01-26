@@ -26,6 +26,10 @@ final class NewIngredient()(implicit actorSystemContainer: ActorSystemContainer)
     }
 
     div(
+      child <-- lastAddedIngredient.signal.map {
+        case Some(ingredient) => div(s"Ingredient ${ingredient.name} was successfully added!")
+        case None             => div()
+      },
       child <-- $info.map {
         case (stores, units, ingredients) =>
           NewIngredientForm(ingredients, units, stores, lastAddedIngredient.writer.contramap[Ingredient](Some(_)))
