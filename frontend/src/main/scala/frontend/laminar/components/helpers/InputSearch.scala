@@ -4,11 +4,13 @@ import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import org.scalajs.dom.html
 
+import scala.collection.immutable
+
 object InputSearch {
 
   def apply[T](
       values: Observable[T],
-      elements: List[T],
+      elements: immutable.Seq[T],
       filter: T => T => Boolean,
       decoder: String => T,
       printer: T => String,

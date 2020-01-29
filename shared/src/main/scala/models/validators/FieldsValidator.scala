@@ -12,6 +12,11 @@ final class FieldsValidator[-T, +E] private (val fields: Map[String, Validator[T
 
   def contraFlatMap[U](f: U => List[T]): FieldsValidator[U, E] = FieldsValidator(fields.mapValues(_.contraFlatMap(f)))
 
+  def maybeContraMap[U, F >: E](f: U => Option[T], error: (String, F)): FieldsValidator[U, F] = FieldsValidator(
+    fields.mapValues(_.maybeContraMap(f, error._2).bypassValidator(f(_: U).isEmpty)) +
+      (error._1 -> Validator.allowAllValidator.maybeContraMap(f, error._2))
+  )
+
   def toValidator: Validator[T, E] = fields.values.foldLeft[Validator[T, E]](Validator.allowAllValidator)(_ ++ _)
 
 }

@@ -10,7 +10,7 @@ object InputString {
       title: String,
       values: Signal[String],
       $formDataChanger: Observer[String]
-  ): ReactiveHtmlElement[html.Div] = div(
+  ): ReactiveHtmlElement[html.Span] = span(
     className := "input-string",
     title,
     input(

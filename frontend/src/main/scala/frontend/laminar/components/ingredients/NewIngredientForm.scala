@@ -86,9 +86,9 @@ final class NewIngredientForm(
       ),
       ListForm[Store](
         "Stores",
-        formData.signal.map(_.stores),
-        storesChanger,
-        StoreInput(stores.toList, _, _)
+        formData.signal.map(_.stores.zipWithIndex),
+        storesChanger.contramapWriter[List[(Store, Int)]](_.map(_._1)),
+        StoreInput(_, _, _, stores.toList)
       ),
       input(tpe := "submit", value := "Submit", className <-- $errors.map(_.isEmpty).map(if (_) "valid" else "invalid"))
     )

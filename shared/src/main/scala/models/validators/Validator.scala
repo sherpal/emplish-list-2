@@ -55,11 +55,18 @@ sealed trait Validator[-T, +E] {
     */
   final def contraFlatMap[A](f: A => List[T]): Validator[A, E] = validator(f(_).flatMap(validate))
 
+  final def maybeContraMap[A, F >: E](f: A => Option[T], error: => F): Validator[A, F] =
+    validator(f(_).map(validate).getOrElse(List(error)))
+
+  final def bypassValidator[U <: T](predicate: U => Boolean): Validator[U, E] =
+    validator((u: U) => if (predicate(u)) Nil else validate(u))
+
   /**
     * Creates a [[Validator]] for Options from this validator.
     * See Validator.optionValidator for argument `noneError`.
     */
-  final def toOptionValidator[F >: E](noneError: Option[F]): Validator[Option[T], F] = optionValidator(this, noneError)
+  final def toOptionValidator[F >: E](noneError: => Option[F]): Validator[Option[T], F] =
+    optionValidator(this, noneError)
 
 }
 

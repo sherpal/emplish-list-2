@@ -17,7 +17,7 @@ import scala.concurrent.duration._
 
 trait SimpleForm[FormData] {
 
-  private implicit val owner: Owner = new Owner {}
+  protected implicit val owner: Owner = new Owner {}
 
   type FormDataChanger = FormData => FormData
 
@@ -25,7 +25,7 @@ trait SimpleForm[FormData] {
   implicit val actorSystem: ActorSystem
   protected implicit def ec: ExecutionContext = actorSystem.dispatcher
 
-  val formData: Var[FormData] = Var(formDataWithUnit.unit)
+  lazy val formData: Var[FormData] = Var(formDataWithUnit.unit) // lazy to avoid problems with missing formDataWithUnit
   private val formDataBus = new EventBus[FormData]()
   formDataBus.events.foreach(data => formData.update(_ => data))
   private val errors = new EventBus[Map[String, List[BackendError]]]()
@@ -59,9 +59,9 @@ trait SimpleForm[FormData] {
     .wireTap(errors => println(s"The errors pass: ${errors.size} errors"))
     .to(errorsSink)
 
-  def run(): Unit = formSource.run()
+  final def run(): Unit = formSource.run()
 
-  def clearForm(): Unit =
+  final def clearForm(): Unit =
     formDataChangerWriter.onNext(_ => formDataWithUnit.unit)
 
 }
