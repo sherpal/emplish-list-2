@@ -7,7 +7,7 @@ import frontend.laminar.components.Component
 import frontend.laminar.components.basket.BasketBoard
 import frontend.laminar.components.headers.{GlobalHeader, Navigation}
 import frontend.laminar.components.ingredients.{IngredientBoard, NewIngredient}
-import frontend.laminar.components.recipes.{RecipeBoard, RecipeEditorContainer}
+import frontend.laminar.components.recipes.{RecipeBoard, RecipeDisplayContainer, RecipeEditorContainer}
 import frontend.laminar.router.{Route, Router, Routes}
 import frontend.utils.http.DefaultHttp._
 import io.circe.generic.auto._
@@ -59,6 +59,10 @@ final class MainBoard private () extends Component[html.Div] {
                   Route(
                     Recipes.editorPath / (segment[Int] || "new"),
                     (recipeIdOrNew: Either[Int, Unit]) => RecipeEditorContainer(recipeIdOrNew.swap.toOption)
+                  ),
+                  Route(
+                    Recipes.viewRecipePath / segment[Int],
+                    (recipeId: Int) => RecipeDisplayContainer(recipeId)
                   ),
                   // recipe display container route
                   Route(root / "basket", () => BasketBoard())

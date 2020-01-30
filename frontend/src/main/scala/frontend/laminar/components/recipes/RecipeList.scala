@@ -14,8 +14,12 @@ object RecipeList {
   }
 
   private def recipeRow(recipe: RecipeSummary) = tr(
-    dataTag(value := recipe.uniqueId.toString),
-    td(className := "clickable", onClick.mapTo(recipe.uniqueId) --> (uid => goToRecipe(uid))),
+    td(
+      className := "clickable",
+      onClick.mapTo(recipe.uniqueId) --> (uid => goToRecipe(uid)),
+      dataTag(value := recipe.uniqueId.toString),
+      recipe.name
+    ),
     td(recipe.createdBy)
   )
 
@@ -23,7 +27,7 @@ object RecipeList {
     Link(to = Recipes.newRecipePath)(text = "New Recipe"),
     table(
       thead(
-        tr(th("Recipe name", "Created by"))
+        tr(th("Recipe name"), th("Created by"))
       ),
       tbody(
         recipes.map(recipe => recipeRow(recipe))

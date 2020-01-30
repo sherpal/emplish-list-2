@@ -10,7 +10,7 @@ object RecipeIngredientsDisplay {
   def apply(ingredientQuantities: Observable[List[IngredientQuantity]]): ReactiveElement[UList] = ul(
     children <-- ingredientQuantities.map(_.map {
       case IngredientQuantity(ingredient, amount) =>
-        li(s"${ingredient.name} ($amount ${ingredient.unit.name}")
+        li(s"${ingredient.name} ($amount ${ingredient.unit.name})")
     })
   )
 

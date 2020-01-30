@@ -64,6 +64,12 @@ final class ListForm[T](
         listWriter.contramap[(Option[T], Int)](e => valueUpdater(currentList.now)(e._1, e._2)).contramap[(T, Int)] {
           case (t, index) => Some(t) -> index
         }
+      ),
+      " ",
+      span(
+        className := "clickable",
+        onClick.mapTo(valueUpdater(currentList.now)(None, index)) --> listWriter,
+        img(src := TrashPictogram.asInstanceOf[String], alt := "delete", className := "icon-size")
       )
     )
 

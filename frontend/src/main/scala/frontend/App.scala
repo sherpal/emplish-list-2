@@ -2,7 +2,6 @@ package frontend
 
 import frontend.components.login.{Login, Register}
 import frontend.components.main.{RedirectHome, Main => MainDashboard}
-import frontend.laminarcomponents.Test
 import frontend.utils.history.DefaultNavigator
 import org.scalajs.dom.History
 import router.{Link, Route, Router, Routes}
@@ -99,7 +98,5 @@ object NewItemPictogram extends js.Object
       )
     )
   )
-
-  Test
 
 }

@@ -64,4 +64,7 @@ trait SimpleForm[FormData] {
   final def clearForm(): Unit =
     formDataChangerWriter.onNext(_ => formDataWithUnit.unit)
 
+  final def setFormData(data: FormData): Unit =
+    formDataChangerWriter.onNext(_ => data)
+
 }

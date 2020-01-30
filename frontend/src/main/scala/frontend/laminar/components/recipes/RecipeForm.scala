@@ -13,7 +13,7 @@ import frontend.laminar.components.helpers.forms.{InputInt, InputString, InputTe
 import frontend.laminar.router.Router
 import frontend.laminar.utils.ActorSystemContainer
 import frontend.utils.http.DefaultHttp._
-import models.emplishlist.{Ingredient, IngredientQuantity, Recipe}
+import models.emplishlist.{Ingredient, Recipe}
 import org.scalajs.dom
 import sttp.client.Response
 import io.circe.generic.auto._
@@ -100,13 +100,9 @@ final class RecipeForm(
       )
     )
 
-    elem.subscribe(_.mountEvents) {
-      case NodeDidMount =>
-        formData.writer.onNext(UserEnteredRecipe.fromRecipe(initialRecipe))
-      case _ =>
-    }
-
     run()
+
+    setFormData(UserEnteredRecipe.fromRecipe(initialRecipe))
 
     elem
   }
