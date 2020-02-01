@@ -1,4 +1,4 @@
-package frontend.components.recipes
+package frontend.utils
 
 import urldsl.errors.DummyError
 import urldsl.language.PathSegment

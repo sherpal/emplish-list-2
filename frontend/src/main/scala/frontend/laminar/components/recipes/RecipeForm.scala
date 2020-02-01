@@ -5,13 +5,13 @@ import com.raquo.laminar.api.L
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.lifecycle.NodeDidMount
 import com.raquo.laminar.nodes.ReactiveHtmlElement
-import frontend.components.recipes.Recipes
 import frontend.laminar.components.Component
 import frontend.laminar.components.forms.{FormGroup, ListForm, SimpleForm}
 import frontend.laminar.components.helpers.InputSearch
 import frontend.laminar.components.helpers.forms.{InputInt, InputString, InputTextArea}
 import frontend.laminar.router.Router
 import frontend.laminar.utils.ActorSystemContainer
+import frontend.utils.Recipes
 import frontend.utils.http.DefaultHttp._
 import models.emplishlist.{Ingredient, Recipe}
 import org.scalajs.dom

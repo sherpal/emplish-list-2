@@ -2,8 +2,8 @@ package frontend.laminar.components.headers
 
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
-import frontend.components.recipes.Recipes
 import frontend.laminar.router.Link
+import frontend.utils.Recipes
 import org.scalajs.dom.html
 import urldsl.language.PathSegment.dummyErrorImpl._
 

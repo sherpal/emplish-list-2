@@ -2,8 +2,8 @@ package frontend.laminar.components.recipes
 
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
-import frontend.components.recipes.Recipes
 import frontend.laminar.router.{Link, Router}
+import frontend.utils.Recipes
 import models.RecipeSummary
 import org.scalajs.dom.html
 

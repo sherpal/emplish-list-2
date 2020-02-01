@@ -2,7 +2,6 @@ package frontend.laminar.components.main
 
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
-import frontend.components.recipes.Recipes
 import frontend.laminar.components.Component
 import frontend.laminar.components.basket.BasketBoard
 import frontend.laminar.components.headers.{GlobalHeader, Navigation}
@@ -17,6 +16,7 @@ import sttp.client._
 import urldsl.language.PathSegment.dummyErrorImpl._
 import urldsl.language.QueryParameters.dummyErrorImpl.{param => qParam}
 import frontend.laminar.components.users.AcceptUser
+import frontend.utils.Recipes
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
