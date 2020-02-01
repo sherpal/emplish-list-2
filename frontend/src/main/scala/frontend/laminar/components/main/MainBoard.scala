@@ -11,7 +11,7 @@ import frontend.laminar.router.{Route, Router, Routes}
 import frontend.utils.http.DefaultHttp._
 import io.circe.generic.auto._
 import models.users.User
-import org.scalajs.dom.html
+import org.scalajs.dom
 import sttp.client._
 import urldsl.language.PathSegment.dummyErrorImpl._
 import urldsl.language.QueryParameters.dummyErrorImpl.{param => qParam}
@@ -20,7 +20,7 @@ import frontend.utils.Recipes
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-final class MainBoard private () extends Component[html.Div] {
+final class MainBoard private () extends Component[dom.html.Div] {
 
   private def me = EventStream.fromFuture(
     boilerplate
@@ -39,7 +39,7 @@ final class MainBoard private () extends Component[html.Div] {
       .map(_.is200)
   )
 
-  val element: ReactiveHtmlElement[html.Div] = {
+  val element: ReactiveHtmlElement[dom.html.Div] = {
 
     val meAndAdmin = me
       .collect { case Some(user) => user }
@@ -80,13 +80,19 @@ final class MainBoard private () extends Component[html.Div] {
         },
       child <-- meAndAdmin.fold(true)((_, _) => false).map {
         if (_)
-          div(className := "app", GlobalHeader(User("", "...")), Navigation(false))
+          div(
+            className := "app",
+            GlobalHeader(User("", Option(dom.window.sessionStorage.getItem("userName")).getOrElse("..."))),
+            Navigation(false)
+          )
         else emptyNode
       }
     )
 
     // go back to login if not connected
     me.filter(_.isEmpty).foreach(_ => Router.router.moveTo("/login"))(element)
+    me.collect { case Some(user) => user }
+      .foreach(user => dom.window.sessionStorage.setItem("userName", user.name))(element)
 
     element
   }
