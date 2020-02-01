@@ -51,7 +51,7 @@ trait SimpleForm[FormData] {
   private val formSource: RunnableGraph[NotUsed] = Source
     .readFromEventStream(formDataChanger.events)
     .scan(formDataWithUnit.unit) { case (form, changer) => changer(form) }
-    .wireTap(formData => println("The form data passes: " + formData)) // todo: remove that
+    //.wireTap(formData => println("The form data passes: " + formData)) // todo: remove that
     .alsoTo(formDataSink)
     .groupedWithin(10, 200.milliseconds)
     .map(_.last)

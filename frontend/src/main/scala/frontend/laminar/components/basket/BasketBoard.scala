@@ -73,6 +73,8 @@ object BasketBoard {
       }
     )
 
+    finished.signal.changes.filter(identity).mapTo(basket.now).foreach(BasketLoader.saveBasket)
+
     element
   }
 

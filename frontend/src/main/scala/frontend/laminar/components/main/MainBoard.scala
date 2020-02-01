@@ -41,10 +41,12 @@ final class MainBoard private () extends Component[html.Div] {
 
   val element: ReactiveHtmlElement[html.Div] = {
 
+    val meAndAdmin = me
+      .collect { case Some(user) => user }
+      .combineWith(amIAdmin)
+
     val element = div(
-      child <-- me
-        .collect { case Some(user) => user }
-        .combineWith(amIAdmin)
+      child <-- meAndAdmin
         .map {
           case (user, admin) =>
             div(
@@ -72,12 +74,15 @@ final class MainBoard private () extends Component[html.Div] {
                       (qParam[String]("userName").? & qParam[String]("randomKey").?),
                     (_: Unit, matching: (Option[String], Option[String])) => AcceptUser(matching._1, matching._2)
                   )
-
-                  // handle registration route
                 )
               )
             )
-        }
+        },
+      child <-- meAndAdmin.fold(true)((_, _) => false).map {
+        if (_)
+          div(className := "app", GlobalHeader(User("", "...")), Navigation(false))
+        else emptyNode
+      }
     )
 
     // go back to login if not connected
