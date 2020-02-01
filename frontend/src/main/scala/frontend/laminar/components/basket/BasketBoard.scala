@@ -1,7 +1,7 @@
 package frontend.laminar.components.basket
 
+import akka.stream.scaladsl.{Sink, Source}
 import com.raquo.laminar.api.L._
-import com.raquo.laminar.lifecycle.{NodeDidMount, NodeWasDiscarded, NodeWillUnmount}
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.utils.{ActorSystemContainer, InfoDownloader}
 import frontend.utils.basket.BasketLoader
@@ -10,6 +10,9 @@ import models.emplishlist.basket.Basket
 import models.emplishlist.{Ingredient, Recipe}
 import org.scalajs.dom
 import org.scalajs.dom.html
+import streams.sources.ReadFromEventStream._
+
+import scala.concurrent.duration._
 
 object BasketBoard {
 
@@ -37,12 +40,26 @@ object BasketBoard {
       BasketLoader.saveBasket(basket.now)
     }
 
+    dom.window.addEventListener("beforeunload", savingBasket)
+
+    Source
+      .readFromEventStream(basket.signal.changes)
+      .groupedWithin(200, 1.second)
+      .map(_.last)
+      .wireTap(_ => println("Saving basket"))
+      .to(Sink.foreach(BasketLoader.saveBasket))
+      .run()
+
+    for (savedBasket <- BasketLoader.loadBasket) {
+      basket.update(_ => savedBasket)
+    }
+
     def clearBasket(): Unit = {
       BasketLoader.clearBasket()
       basket.update(_ => Basket.empty)
     }
 
-    val element = div(
+    implicit val element: ReactiveHtmlElement[html.Div] = div(
       child <-- maybeRecipesAndIngredients.map {
         case (recipes, ingredients) =>
           div(
@@ -50,27 +67,11 @@ object BasketBoard {
             p(button(onClick --> (_ => clearBasket()), "Clear basket")),
             child <-- finished.signal.map {
               if (_) FinalList(basket.signal.map(_.allIngredients), finished.writer)
-              else MakeBasket(basket.writer, recipes, ingredients, finished.writer, BasketLoader.loadBasket)
+              else MakeBasket(basket.writer, recipes, ingredients, finished.writer, basket.now)
             }
           )
       }
     )
-
-    //dom.window.addEventListener("beforeunload", savingBasket)
-
-    element.subscribe(_.mountEvents) {
-      case NodeDidMount =>
-        println("hello")
-        dom.window.addEventListener("beforeunload", savingBasket)
-        for (savedBasket <- BasketLoader.loadBasket) {
-          basket.update(_ => savedBasket)
-        }
-      case NodeWillUnmount =>
-        println("coucou")
-        BasketLoader.saveBasket(basket.now)
-        dom.window.removeEventListener("beforeunload", savingBasket)
-      case NodeWasDiscarded => // do nothing
-    }
 
     element
   }

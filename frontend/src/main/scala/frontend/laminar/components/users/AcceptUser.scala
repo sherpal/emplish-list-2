@@ -109,6 +109,10 @@ final class AcceptUser private (maybeUserNameAndRandomKey: Option[(String, Strin
       section(
         h2("Pending registrations"),
         table(
+          display <-- $pendingRegistrations.map {
+            case Some(_ :: Nil) => "block"
+            case _              => "none"
+          },
           thead(tr(th("User name"), th("email"), th("key"))),
           tbody(
             children <-- $pendingRegistrations.collect { case Some(registrations) => registrations }
@@ -133,7 +137,7 @@ final class AcceptUser private (maybeUserNameAndRandomKey: Option[(String, Strin
           case Some(Nil) => true
           case None      => true
           case _         => false
-        }.mapTo("There are no pending registrations")
+        }.mapTo("There are no pending registrations.")
       ),
       section(
         h2("Current users"),

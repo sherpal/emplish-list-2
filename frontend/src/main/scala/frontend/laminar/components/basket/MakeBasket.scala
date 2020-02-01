@@ -22,7 +22,7 @@ final class MakeBasket private (
     recipes: List[Recipe],
     ingredients: List[Ingredient],
     finishWriter: Observer[Boolean],
-    initialBasket: Option[Basket]
+    initialBasket: Basket
 )(implicit val formDataWithUnit: WithUnit[Basket], val actorSystem: ActorSystem)
     extends Component[dom.html.Div]
     with SimpleForm[Basket] {
@@ -49,7 +49,11 @@ final class MakeBasket private (
   val element: ReactiveHtmlElement[html.Div] = {
     run()
 
-    createFormDataChanger[Basket](b => _ => b).onNext(initialBasket.getOrElse(formDataWithUnit.unit))
+    createFormDataChanger[Basket](b => _ => b).onNext(initialBasket)
+    extraIngredientsBus.writer.onNext(
+      initialBasket.extraIngredients
+        .map(UserEnteredIngredientQuantity.fromIngredientQuantity)
+    )
 
     div(
       section(
@@ -175,7 +179,7 @@ object MakeBasket {
       recipes: List[Recipe],
       ingredients: List[Ingredient],
       finishWriter: Observer[Boolean],
-      initialBasket: Option[Basket]
+      initialBasket: Basket
   )(implicit formDataWithUnit: WithUnit[Basket], actorSystem: ActorSystem): ReactiveHtmlElement[html.Div] =
     new MakeBasket(basketWriter, recipes, ingredients, finishWriter, initialBasket)
 
