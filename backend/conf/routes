@@ -16,11 +16,12 @@ GET     /api/am-i-admin                        controllers.UsersController.amIAd
 POST    /api/login                             controllers.UsersController.login
 POST    /api/logout                            controllers.UsersController.logout
 POST    /api/register                          controllers.UsersController.register
+GET     /api/users/all-users-names             controllers.UsersController.usersNames
 POST    /api/accept-user                       controllers.UsersController.addPreRegisteredUser(userName, randomKey)
 POST    /api/reject-user                       controllers.UsersController.rejectPreRegisteredUser(userName, randomKey)
-GET     /api/registration-email                controllers.UsersController.pendingRegistrationEmail(userName, randomKey)
-GET     /api/pending-registrations             controllers.UsersController.downloadPendingRegistrations(limit: Int = 5)
-GET     /api/pending-registrations/:limit      controllers.UsersController.downloadPendingRegistrations(limit: Int)
+GET     /api/registration/registration-email                controllers.UsersController.pendingRegistrationEmail(userName, randomKey)
+GET     /api/registration/pending-registrations             controllers.UsersController.downloadPendingRegistrations(limit: Int = 5)
+GET     /api/registration/pending-registrations/:limit      controllers.UsersController.downloadPendingRegistrations(limit: Int)
 
 # Ingredients
 GET     /api/ingredients/ingredients                controllers.IngredientsController.allIngredients

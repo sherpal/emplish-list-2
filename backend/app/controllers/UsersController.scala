@@ -109,6 +109,10 @@ final class UsersController @Inject()(
       }.runToFuture
   }
 
+  def usersNames: Action[AnyContent] = authGuard.admin.async { implicit request =>
+    users.map(_.map(_.name)).map(Ok(_)).runToFuture
+  }
+
   def addPreRegisteredUser(userName: UserName, randomKey: String): Action[AnyContent] = authGuard.admin.async {
     implicit request =>
       (for {

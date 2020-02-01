@@ -18,9 +18,15 @@ final case class UserEnteredIngredientQuantity(ingredientName: String, amount: S
 
 object UserEnteredIngredientQuantity {
 
+  def fromIngredientQuantity(ingredientQuantity: IngredientQuantity): UserEnteredIngredientQuantity =
+    UserEnteredIngredientQuantity(
+      ingredientQuantity.ingredient.name,
+      ingredientQuantity.amount.toString
+    )
+
   implicit def withUnit(
       implicit ingredientUnit: WithUnit[IngredientQuantity]
   ): WithUnit[UserEnteredIngredientQuantity] =
-    WithUnit(UserEnteredIngredientQuantity(ingredientUnit.unit.ingredient.name, ingredientUnit.unit.amount.toString))
+    WithUnit(fromIngredientQuantity(ingredientUnit.unit))
 
 }

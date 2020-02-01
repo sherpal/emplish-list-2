@@ -15,6 +15,8 @@ import models.users.User
 import org.scalajs.dom.html
 import sttp.client._
 import urldsl.language.PathSegment.dummyErrorImpl._
+import urldsl.language.QueryParameters.dummyErrorImpl.{param => qParam}
+import frontend.laminar.components.users.AcceptUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -64,8 +66,13 @@ final class MainBoard private () extends Component[html.Div] {
                     Recipes.viewRecipePath / segment[Int],
                     (recipeId: Int) => RecipeDisplayContainer(recipeId)
                   ),
-                  // recipe display container route
-                  Route(root / "basket", () => BasketBoard())
+                  Route(root / "basket", () => BasketBoard()),
+                  Route(
+                    (root / "handle-registration").filter(_ => admin) ?
+                      (qParam[String]("userName").? & qParam[String]("randomKey").?),
+                    (_: Unit, matching: (Option[String], Option[String])) => AcceptUser(matching._1, matching._2)
+                  )
+
                   // handle registration route
                 )
               )

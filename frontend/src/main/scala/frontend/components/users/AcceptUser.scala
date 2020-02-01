@@ -41,7 +41,7 @@ import scala.util.{Failure, Success}
 
   override def componentDidMount(): Unit = {
     boilerplate
-      .get(path("pending-registrations"))
+      .get(path("registration", "pending-registrations"))
       .response(responseAs[List[PendingRegistration]])
       .send()
       .map(_.body)
@@ -59,7 +59,7 @@ import scala.util.{Failure, Success}
       } yield
         boilerplate
           .get(
-            pathWithMultipleParams(queryParamForUser(userName, randomKey), "registration-email")
+            pathWithMultipleParams(queryParamForUser(userName, randomKey), "registration", "registration-email")
           )
           .response(asStringAlways)
           .send()
@@ -156,7 +156,7 @@ import scala.util.{Failure, Success}
                       )
                   ),
                   td(pendingRegistration.email),
-                  td(pendingRegistration.randomKey)
+                  td(abbr(pendingRegistration.randomKey.take(7)))
                 ),
               _.name
             ),

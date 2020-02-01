@@ -8,7 +8,7 @@ import scala.util.Try
 
 object InputInt {
 
-  def apply(title: String, values: Observable[Int], valuesWriter: Observer[Int]): ReactiveHtmlElement[html.Div] = div(
+  def apply(title: String, values: Observable[Int], valuesWriter: Observer[Int]): ReactiveHtmlElement[html.Span] = span(
     title,
     input(
       tpe := "number",

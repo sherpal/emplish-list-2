@@ -3,7 +3,7 @@ package frontend.laminar.components.basket
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.lifecycle.{NodeDidMount, NodeWasDiscarded, NodeWillUnmount}
 import com.raquo.laminar.nodes.ReactiveHtmlElement
-import frontend.laminar.utils.InfoDownloader
+import frontend.laminar.utils.{ActorSystemContainer, InfoDownloader}
 import frontend.utils.basket.BasketLoader
 import io.circe.generic.auto._
 import models.emplishlist.basket.Basket
@@ -11,11 +11,11 @@ import models.emplishlist.{Ingredient, Recipe}
 import org.scalajs.dom
 import org.scalajs.dom.html
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
 object BasketBoard {
 
-  def apply(): ReactiveHtmlElement[html.Div] = {
+  def apply()(implicit actorSystemContainer: ActorSystemContainer): ReactiveHtmlElement[html.Div] = {
+
+    import actorSystemContainer._
 
     val basket = Var[Basket](Basket.empty)
     val maybeExistingRecipe = new InfoDownloader("recipes")
@@ -50,19 +50,23 @@ object BasketBoard {
             p(button(onClick --> (_ => clearBasket()), "Clear basket")),
             child <-- finished.signal.map {
               if (_) FinalList(basket.signal.map(_.allIngredients), finished.writer)
-              else MakeBasket(recipes, ingredients)
+              else MakeBasket(basket.writer, recipes, ingredients, finished.writer, BasketLoader.loadBasket)
             }
           )
       }
     )
 
+    //dom.window.addEventListener("beforeunload", savingBasket)
+
     element.subscribe(_.mountEvents) {
       case NodeDidMount =>
+        println("hello")
         dom.window.addEventListener("beforeunload", savingBasket)
         for (savedBasket <- BasketLoader.loadBasket) {
           basket.update(_ => savedBasket)
         }
       case NodeWillUnmount =>
+        println("coucou")
         BasketLoader.saveBasket(basket.now)
         dom.window.removeEventListener("beforeunload", savingBasket)
       case NodeWasDiscarded => // do nothing
