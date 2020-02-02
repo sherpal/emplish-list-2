@@ -16,6 +16,7 @@ import sttp.client._
 import urldsl.language.PathSegment.dummyErrorImpl._
 import urldsl.language.QueryParameters.dummyErrorImpl.{param => qParam}
 import frontend.laminar.components.users.AcceptUser
+import frontend.laminar.fixlaminar.Fixes
 import frontend.utils.Recipes
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -46,14 +47,17 @@ final class MainBoard private () extends Component[dom.html.Div] {
       .combineWith(amIAdmin)
 
     val element = div(
+      Fixes.readMountEvents,
       child <-- meAndAdmin
         .map {
           case (user, admin) =>
             div(
+              Fixes.readMountEvents,
               className := "app",
               GlobalHeader(user),
               Navigation(admin),
               div(
+                Fixes.readMountEvents,
                 className := "main",
                 child <-- Routes
                   .firstOf(

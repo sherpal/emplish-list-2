@@ -2,7 +2,9 @@ package frontend.laminar.components.basket
 
 import akka.stream.scaladsl.{Sink, Source}
 import com.raquo.laminar.api.L._
+import com.raquo.laminar.lifecycle.{NodeDidMount, NodeWasDiscarded, NodeWillUnmount}
 import com.raquo.laminar.nodes.ReactiveHtmlElement
+import frontend.laminar.fixlaminar.Fixes
 import frontend.laminar.utils.{ActorSystemContainer, InfoDownloader}
 import frontend.utils.basket.BasketLoader
 import io.circe.generic.auto._
@@ -60,6 +62,7 @@ object BasketBoard {
     }
 
     implicit val element: ReactiveHtmlElement[html.Div] = div(
+      Fixes.readMountEvents,
       child <-- maybeRecipesAndIngredients.map {
         case (recipes, ingredients) =>
           div(
@@ -74,6 +77,15 @@ object BasketBoard {
     )
 
     finished.signal.changes.filter(identity).mapTo(basket.now).foreach(BasketLoader.saveBasket)
+
+    element.subscribe(_.mountEvents) {
+      case NodeDidMount =>
+        println("Basket did mount")
+      case NodeWillUnmount =>
+        println("Basket will unmount")
+      case NodeWasDiscarded =>
+        println("Basket was discarded")
+    }
 
     element
   }

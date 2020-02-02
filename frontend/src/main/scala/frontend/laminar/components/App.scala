@@ -6,6 +6,7 @@ import frontend.AppCSS
 import frontend.laminar.components.helpers.Redirect
 import frontend.laminar.components.login.{AfterRegister, Login, Register}
 import frontend.laminar.components.main.MainBoard
+import frontend.laminar.fixlaminar.Fixes
 import frontend.laminar.router.{Route, Routes}
 import org.scalajs.dom.html
 import urldsl.language.PathSegment.dummyErrorImpl._
@@ -27,6 +28,7 @@ object App {
   )
 
   def apply(): ReactiveHtmlElement[html.Div] = div(
+    Fixes.readMountEvents,
     child <-- Routes
       .firstOf(
         Route(r / endOfSegments, () => Redirect(r / "home")),
