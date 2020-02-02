@@ -4,7 +4,7 @@ import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.AppCSS
 import frontend.laminar.components.helpers.Redirect
-import frontend.laminar.components.login.{Login, Register}
+import frontend.laminar.components.login.{AfterRegister, Login, Register}
 import frontend.laminar.components.main.MainBoard
 import frontend.laminar.router.{Route, Routes}
 import org.scalajs.dom.html
@@ -32,7 +32,8 @@ object App {
         Route(r / endOfSegments, () => Redirect(r / "home")),
         Route(mainBoardRoutes, () => MainBoard()),
         Route(r / "login", () => Login()),
-        Route(r / "sign-up", () => Register())
+        Route(r / "sign-up", () => Register()),
+        Route(r / "after-registration", () => AfterRegister())
       )
       .map {
         case Some(elem) => elem

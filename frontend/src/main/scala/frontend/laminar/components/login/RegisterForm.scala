@@ -37,7 +37,7 @@ final class RegisterForm private (
         .send()
         .onComplete {
           case Success(m: Response[_]) if m.isSuccess =>
-            Router.router.moveTo("/login") // todo: view to say that everything was ok and a mail will be sent
+            Router.router.moveTo("/after-registration")
           case Success(Response(Left(Right(backendErrors)), _, _, _, _)) =>
             errorsWriter.onNext(backendErrors)
           case Failure(exception) =>
