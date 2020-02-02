@@ -7,9 +7,9 @@ import models.validators.StringValidators._
 import models.validators.Validator._
 import syntax.WithUnit
 
-final case class Ingredient(id: Int, name: String, unit: IngredientUnit, stores: List[Store])
+final case class Ingredient(id: Int, name: String, unit: IngredientUnit, stores: List[Store], tags: List[String])
     extends Ordered[Ingredient] {
-  def toDBIngredient: DBIngredient = DBIngredient(id, name, unit.name)
+  def toDBIngredient: DBIngredient = DBIngredient(id, name, unit.name, tags.mkString(" "))
   def ingredientsInStore: List[DBIngredientsInStore] = stores.map(s => DBIngredientsInStore(id, s.id))
 
   def compare(that: Ingredient): Int = this.name compare that.name
@@ -18,7 +18,7 @@ final case class Ingredient(id: Int, name: String, unit: IngredientUnit, stores:
 object Ingredient {
 
   implicit def ingredientUnit: WithUnit[Ingredient] =
-    WithUnit(Ingredient(0, "", implicitly[WithUnit[IngredientUnit]].unit, List(implicitly[WithUnit[Store]].unit)))
+    WithUnit(Ingredient(0, "", implicitly[WithUnit[IngredientUnit]].unit, List(implicitly[WithUnit[Store]].unit), Nil))
 
   def empty: Ingredient = ingredientUnit.unit
 
@@ -47,7 +47,8 @@ object Ingredient {
         ).contraFlatMap[Ingredient](_.stores) ++ simpleValidator[List[Store], BackendError](
           stores => stores.diff(stores.distinct).isEmpty,
           stores => BackendError("validator.NotAllDifferentStores", stores.diff(stores.distinct).mkString(", "))
-        ).contraMap[Ingredient](_.stores))
+        ).contraMap[Ingredient](_.stores)),
+        "tags" -> onlyLowercaseLetters.contraFlatMap[Ingredient](_.tags)
       )
     )
 

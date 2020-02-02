@@ -9,7 +9,12 @@ object StringValidators {
 
   private val sv = simpleValidator[String, E] _
 
+  final val alphabet = "abcdefghijklmnopqrstuvwxyz"
+
   final val nonEmptyString = sv(_.nonEmpty, BackendError("validator.nonEmptyString", _))
+
+  final val onlyLowercaseLetters =
+    sv(_.forall(c => alphabet.exists(_ == c)), BackendError("validator.stringOnlyLowerLetters", _))
 
   def atLeastLength(n: Int): Validator[String, BackendError] =
     sv(_.length >= n, BackendError("validator.nonLengthString", _))

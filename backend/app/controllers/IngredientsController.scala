@@ -77,4 +77,8 @@ final class IngredientsController @Inject()(
       updateIngredient(ingredient).map(Ok(_)).runToFuture
   }
 
+  def tags: Action[AnyContent] = authGuard().async {
+    allIngredientsTag.map(Ok(_)).runToFuture
+  }
+
 }

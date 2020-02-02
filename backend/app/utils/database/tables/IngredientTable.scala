@@ -9,8 +9,9 @@ final class IngredientTable(tag: Tag) extends Table[DBIngredient](tag, "ingredie
   def id = column[Int]("unique_id", O.PrimaryKey, O.AutoInc)
   def name = column[String]("name", O.Unique)
   def unitName = column[String]("unit_name")
+  def tags = column[String]("tags")
 
-  def * = (id, name, unitName) <> (DBIngredient.tupled, DBIngredient.unapply)
+  def * = (id, name, unitName, tags) <> (DBIngredient.tupled, DBIngredient.unapply)
 
 }
 

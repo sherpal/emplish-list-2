@@ -4,6 +4,7 @@ import models.emplishlist.{Ingredient, IngredientQuantity}
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.NewItemPictogram
+import frontend.laminar.components.helpers.InputTags
 import frontend.laminar.router.Link
 import frontend.utils.basket.BasketLoader
 import org.scalajs.dom.html
@@ -25,8 +26,29 @@ private[ingredients] object IngredientList {
 
   def apply(ingredients: Vector[Ingredient]): ReactiveHtmlElement[html.Element] = {
 
+    val tagsFilter = new EventBus[List[String]]()
+    val $tags = tagsFilter.events.fold(List[String]())((_, ls) => ls)
+    val $rows = $tags.map { tags =>
+      ingredients.filter(ingredient => tags.forall(ingredient.tags.contains))
+    }.map(_.take(100)).map(_.map(row))
+
     section(
       h1("Ingredients in database"),
+      section(
+        details(
+          summary("Tags filtering"),
+          p(
+            "Below you can type in tags to filter ingredients and only display a subset."
+          ),
+          p(
+            """Enter each tag prefixed by a '#' and separate them by a space (for example, "#bebe #dejeuner")."""
+          ),
+          p("Note that changes only occur after you release the input focus (e.g., by pressing Enter).")
+        ),
+        p(
+          InputTags($tags, tagsFilter.writer)
+        )
+      ),
       span(className := "clickable", Link(to = root / "new-ingredient")("New Ingredient")),
       table(
         thead(
@@ -34,7 +56,7 @@ private[ingredients] object IngredientList {
           th("Unit")
         ),
         tbody(
-          ingredients.map(row)
+          children <-- $rows
         )
       )
     )

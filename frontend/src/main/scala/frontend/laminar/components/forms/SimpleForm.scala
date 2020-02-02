@@ -2,7 +2,7 @@ package frontend.laminar.components.forms
 
 import akka.NotUsed
 import akka.actor.ActorSystem
-import akka.stream.scaladsl.{RunnableGraph, Sink, Source}
+import akka.stream.scaladsl.{Flow, RunnableGraph, Sink, Source}
 import com.raquo.airstream.eventbus.{EventBus, WriteBus}
 import com.raquo.airstream.eventstream.EventStream
 import models.errors.BackendError
@@ -48,10 +48,16 @@ trait SimpleForm[FormData] {
   private val formDataSink = Sink.writeToBus(formDataEventWriter)
   private val errorsSink = Sink.foreach(errorsWriter.onNext)
 
+  private val debugSink = Flow[FormData]
+    .filter(_ => scala.scalajs.LinkingInfo.developmentMode)
+    .to(
+      Sink.foreach(println)
+    )
+
   private val formSource: RunnableGraph[NotUsed] = Source
     .readFromEventStream(formDataChanger.events)
     .scan(formDataWithUnit.unit) { case (form, changer) => changer(form) }
-    //.wireTap(formData => println("The form data passes: " + formData)) // todo: remove that
+    .alsoTo(debugSink)
     .alsoTo(formDataSink)
     .groupedWithin(10, 200.milliseconds)
     .map(_.last)

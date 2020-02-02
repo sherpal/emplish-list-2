@@ -55,29 +55,32 @@ final class MainBoard private () extends Component[dom.html.Div] {
               Navigation(admin),
               div(
                 className := "main",
-                children <-- Routes(
-                  Route(root / "home" / endOfSegments, () => div(h1("Welcome to Emplish List!"))),
-                  Route(root / "ingredients", () => IngredientBoard()),
-                  Route(root / "new-ingredient", () => NewIngredient()),
-                  Route(Recipes.topLevelPath / endOfSegments, () => RecipeBoard()),
-                  Route(
-                    Recipes.editorPath / (segment[Int] || "new"),
-                    (recipeIdOrNew: Either[Int, Unit]) => RecipeEditorContainer(recipeIdOrNew.swap.toOption)
-                  ),
-                  Route(
-                    Recipes.viewRecipePath / segment[Int],
-                    (recipeId: Int) => RecipeDisplayContainer(recipeId)
-                  ),
-                  Route(root / "basket", () => BasketBoard()),
-                  Route(
-                    (root / "handle-registration").filter(_ => admin) ?
-                      (qParam[String]("userName").? & qParam[String]("randomKey").?),
-                    (_: Unit, matching: (Option[String], Option[String])) => AcceptUser(matching._1, matching._2)
+                child <-- Routes
+                  .firstOf(
+                    Route(root / "home" / endOfSegments, () => div(h1("Welcome to Emplish List!"))),
+                    Route(root / "ingredients", () => IngredientBoard()),
+                    Route(root / "new-ingredient", () => NewIngredient()),
+                    Route(Recipes.topLevelPath / endOfSegments, () => RecipeBoard()),
+                    Route(
+                      Recipes.editorPath / (segment[Int] || "new"),
+                      (recipeIdOrNew: Either[Int, Unit]) => RecipeEditorContainer(recipeIdOrNew.swap.toOption)
+                    ),
+                    Route(
+                      Recipes.viewRecipePath / segment[Int],
+                      (recipeId: Int) => RecipeDisplayContainer(recipeId)
+                    ),
+                    Route(root / "basket", () => BasketBoard()),
+                    Route(
+                      (root / "handle-registration").filter(_ => admin) ?
+                        (qParam[String]("userName").? & qParam[String]("randomKey").?),
+                      (_: Unit, matching: (Option[String], Option[String])) => AcceptUser(matching._1, matching._2)
+                    )
                   )
-                )
+                  .map(_.getOrElse(emptyNode))
               )
             )
         },
+      /** The following child is a mock up until the actual data are loaded, in order to avoid blinking. */
       child <-- meAndAdmin.fold(true)((_, _) => false).map {
         if (_)
           div(

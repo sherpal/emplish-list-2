@@ -68,4 +68,7 @@ trait Ingredients extends MonixDB with Stores {
       else Task.pure(())
     } yield ()
 
+  def allIngredientsTag: Task[Vector[String]] =
+    runAsTask(query.map(_.tags).distinct.result).map(_.toVector.flatMap(_.split(" ").toVector).distinct)
+
 }

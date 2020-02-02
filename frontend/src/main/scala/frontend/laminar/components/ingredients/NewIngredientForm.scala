@@ -5,7 +5,7 @@ import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.components.Component
 import frontend.laminar.components.forms.{ListForm, SimpleForm}
-import frontend.laminar.components.helpers.InputSearch
+import frontend.laminar.components.helpers.{InputSearch, InputTags}
 import frontend.laminar.components.helpers.forms.InputString
 import frontend.laminar.utils.ActorSystemContainer
 import frontend.utils.http.DefaultHttp._
@@ -64,6 +64,7 @@ final class NewIngredientForm(
     val nameChanger = createFormDataChanger((name: String) => _.copy(name = name))
     val storesChanger = createFormDataChanger((stores: List[Store]) => _.copy(stores = stores))
     val unitChanger = createFormDataChanger((unit: IngredientUnit) => _.copy(unit = unit))
+    val tagsChanger = createFormDataChanger((tags: List[String]) => _.copy(tags = tags))
 
     run()
 
@@ -89,6 +90,16 @@ final class NewIngredientForm(
         formData.signal.map(_.stores.zipWithIndex),
         storesChanger.contramapWriter[List[(Store, Int)]](_.map(_._1)),
         StoreInput(_, _, _, stores.toList)
+      ),
+      fieldSet(
+        details(
+          summary("Insert a list of tags for this ingredient:"),
+          p(
+            """Prefix each tag by '#' and separate them by spaces (for example you can put "#winter #dessert")."""
+          )
+        ),
+        br(),
+        InputTags(formData.signal.map(_.tags), tagsChanger)
       ),
       input(tpe := "submit", value := "Submit", className <-- $errors.map(_.isEmpty).map(if (_) "valid" else "invalid"))
     )
