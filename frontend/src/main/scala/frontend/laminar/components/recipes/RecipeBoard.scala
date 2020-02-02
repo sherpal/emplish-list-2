@@ -16,12 +16,14 @@ final class RecipeBoard private ()(implicit actorSystemContainer: ActorSystemCon
 
   val downloader = new InfoDownloader("recipes")
 
+  val $recipes: EventStream[ReactiveHtmlElement[Div]] = downloader
+    .downloadInfo[Vector[Recipe]]("recipes")
+    .collect { case Some(recipes) => recipes }
+    .map(RecipeList.apply)
+
   val element: ReactiveHtmlElement[Div] = div(
     h1("Recipes"),
-    child <-- downloader
-      .downloadInfo[Vector[Recipe]]("recipes")
-      .collect { case Some(recipes) => recipes }
-      .map(RecipeList.apply)
+    child <-- $recipes
   )
 
 }

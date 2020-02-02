@@ -16,17 +16,28 @@ final case class Recipe(
     lastUpdateBy: String,
     lastUpdateOn: Long,
     description: String,
-    forHowManyPeople: Int
+    forHowManyPeople: Int,
+    tags: List[String]
 ) extends RecipeSummary {
   def toDBRecipeInfo: DBRecipeInfo = DBRecipeInfo(
-    DBRecipe(uniqueId, name, createdBy, createdOn, lastUpdateBy, lastUpdateOn, description, forHowManyPeople),
+    DBRecipe(
+      uniqueId,
+      name,
+      createdBy,
+      createdOn,
+      lastUpdateBy,
+      lastUpdateOn,
+      description,
+      forHowManyPeople,
+      tags.mkString(" ")
+    ),
     ingredients.map(_.toDBRecipeIngredient(uniqueId))
   )
 }
 
 object Recipe {
 
-  implicit def recipeWithUnit: WithUnit[Recipe] = WithUnit(Recipe(0, "", Nil, "", 0, "", 0, "", 0))
+  implicit def recipeWithUnit: WithUnit[Recipe] = WithUnit(Recipe(0, "", Nil, "", 0, "", 0, "", 0, Nil))
 
   def empty: Recipe = recipeWithUnit.unit
 
@@ -41,7 +52,8 @@ object Recipe {
         "name" -> nonEmptyString.contraMap[Recipe](_.name),
         "ingredients" -> Validator
           .simpleValidator((_: Recipe).ingredients.nonEmpty, (_: Recipe) => BackendError("emptyIngredientList", "")),
-        "nbrPeople" -> NumericValidators[Int].positive.contraMap[Recipe](_.forHowManyPeople)
+        "nbrPeople" -> NumericValidators[Int].positive.contraMap[Recipe](_.forHowManyPeople),
+        "tags" -> onlyLowercaseLetters.contraFlatMap[Recipe](_.tags)
       ) ++ ingredientQuantityValidator.contraFlatMap[Recipe](_.ingredients).fields
     )
 

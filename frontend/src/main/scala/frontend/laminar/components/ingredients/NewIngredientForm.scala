@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.components.Component
-import frontend.laminar.components.forms.{ListForm, SimpleForm}
+import frontend.laminar.components.forms.{ListForm, SimpleForm, Tags}
 import frontend.laminar.components.helpers.{InputSearch, InputTags}
 import frontend.laminar.components.helpers.forms.InputString
 import frontend.laminar.utils.ActorSystemContainer
@@ -92,12 +92,7 @@ final class NewIngredientForm(
         StoreInput(_, _, _, stores.toList)
       ),
       fieldSet(
-        details(
-          summary("Insert a list of tags for this ingredient:"),
-          p(
-            """Prefix each tag by '#' and separate them by spaces (for example you can put "#winter #dessert")."""
-          )
-        ),
+        Tags.tagsExplanation("ingredient"),
         br(),
         InputTags(formData.signal.map(_.tags), tagsChanger)
       ),

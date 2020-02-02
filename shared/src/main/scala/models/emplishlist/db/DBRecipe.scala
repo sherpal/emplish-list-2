@@ -10,9 +10,13 @@ final case class DBRecipe(
     lastUpdateBy: String,
     lastUpdateOn: Long,
     description: String,
-    forHowManyPeople: Int
+    forHowManyPeople: Int,
+    tagsAsString: String
 ) extends RecipeSummary {
 
-  def tuple: (String, String, Long, String, Int) = (name, lastUpdateBy, lastUpdateOn, description, forHowManyPeople)
+  def tags: List[String] = tagsAsString.split(" ").toList.filterNot(_.isEmpty)
+
+  def tuple: (String, String, Long, String, Int, String) =
+    (name, lastUpdateBy, lastUpdateOn, description, forHowManyPeople, tagsAsString)
 
 }

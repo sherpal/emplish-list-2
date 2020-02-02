@@ -15,7 +15,8 @@ final case class UserEnteredRecipe(
     lastUpdateBy: String,
     lastUpdateOn: Long,
     description: String,
-    forHowManyPeople: Int
+    forHowManyPeople: Int,
+    tags: List[String]
 ) {
 
   def maybeRecipe(existingIngredients: immutable.Seq[Ingredient]): Option[Recipe] = {
@@ -44,7 +45,8 @@ final case class UserEnteredRecipe(
         lastUpdateBy,
         lastUpdateOn,
         description,
-        forHowManyPeople
+        forHowManyPeople,
+        tags
       )
     }
   }
@@ -67,7 +69,8 @@ object UserEnteredRecipe {
     recipe.lastUpdateBy,
     recipe.lastUpdateOn,
     recipe.description,
-    recipe.forHowManyPeople
+    recipe.forHowManyPeople,
+    recipe.tags
   )
 
 }

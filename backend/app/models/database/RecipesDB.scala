@@ -60,7 +60,8 @@ trait RecipesDB extends MonixDB {
             dbRecipe.lastUpdateBy,
             dbRecipe.lastUpdateOn,
             dbRecipe.description,
-            dbRecipe.forHowManyPeople
+            dbRecipe.forHowManyPeople,
+            dbRecipe.tags
           )
       }
       .toVector
@@ -91,7 +92,7 @@ trait RecipesDB extends MonixDB {
 
     val updateDBRecipeQuery = query
       .filter(_.uniqueId === dbRecipe.uniqueId)
-      .map(r => (r.name, r.lastUpdateBy, r.lastUpdateOn, r.description, r.forHowManyPeople))
+      .map(r => (r.name, r.lastUpdateBy, r.lastUpdateOn, r.description, r.forHowManyPeople, r.tags))
       .update(dbRecipeWithMetadata.tuple)
 
     val deleteIngredients = IngredientRecipeTable.query

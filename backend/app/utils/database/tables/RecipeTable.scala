@@ -14,9 +14,10 @@ final class RecipeTable(tag: Tag) extends Table[DBRecipe](tag, "recipe") {
   def lastUpdateOn = column[Long]("last_update_on")
   def description = column[String]("description")
   def forHowManyPeople = column[Int]("for_how_many_people")
+  def tags = column[String]("tags")
 
   def * =
-    (uniqueId, name, createdBy, createdOn, lastUpdateBy, lastUpdateOn, description, forHowManyPeople) <>
+    (uniqueId, name, createdBy, createdOn, lastUpdateBy, lastUpdateOn, description, forHowManyPeople, tags) <>
       (DBRecipe.tupled, DBRecipe.unapply)
 
 }

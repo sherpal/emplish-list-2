@@ -4,6 +4,7 @@ import models.emplishlist.{Ingredient, IngredientQuantity}
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.NewItemPictogram
+import frontend.laminar.components.forms.Tags
 import frontend.laminar.components.helpers.InputTags
 import frontend.laminar.router.Link
 import frontend.utils.basket.BasketLoader
@@ -35,16 +36,7 @@ private[ingredients] object IngredientList {
     section(
       h1("Ingredients in database"),
       section(
-        details(
-          summary("Tags filtering"),
-          p(
-            "Below you can type in tags to filter ingredients and only display a subset."
-          ),
-          p(
-            """Enter each tag prefixed by a '#' and separate them by a space (for example, "#bebe #dejeuner")."""
-          ),
-          p("Note that changes only occur after you release the input focus (e.g., by pressing Enter).")
-        ),
+        Tags.tagsFilterExplanation("ingredient"),
         p(
           InputTags($tags, tagsFilter.writer)
         )

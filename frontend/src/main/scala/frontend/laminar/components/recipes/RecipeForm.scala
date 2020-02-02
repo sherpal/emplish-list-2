@@ -3,11 +3,10 @@ package frontend.laminar.components.recipes
 import akka.actor.ActorSystem
 import com.raquo.laminar.api.L
 import com.raquo.laminar.api.L._
-import com.raquo.laminar.lifecycle.NodeDidMount
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.components.Component
-import frontend.laminar.components.forms.{FormGroup, ListForm, SimpleForm}
-import frontend.laminar.components.helpers.InputSearch
+import frontend.laminar.components.forms.{FormGroup, ListForm, SimpleForm, Tags}
+import frontend.laminar.components.helpers.{InputSearch, InputTags}
 import frontend.laminar.components.helpers.forms.{InputInt, InputString, InputTextArea}
 import frontend.laminar.router.Router
 import frontend.laminar.utils.ActorSystemContainer
@@ -49,6 +48,7 @@ final class RecipeForm(
     (description: String) => _.copy(description = description)
   )
   val nbrOfPeopleChanger: WriteBus[Int] = createFormDataChanger((nbr: Int) => _.copy(forHowManyPeople = nbr))
+  val tagsChanger: WriteBus[List[String]] = createFormDataChanger[List[String]](tags => _.copy(tags = tags))
 
   def submit(): Unit = {
 
@@ -93,6 +93,11 @@ final class RecipeForm(
         RecipeForm.row(_, _, _, ingredients.map(_.name))
       ),
       fieldSet(InputTextArea("Description", formData.signal.map(_.description), descriptionChanger)),
+      fieldSet(
+        Tags.tagsExplanation("recipe"),
+        br(),
+        InputTags(formData.signal.map(_.tags), tagsChanger)
+      ),
       input(
         className <-- $errors.map(_.isEmpty).map(if (_) "valid" else "invalid"),
         tpe := "submit",
