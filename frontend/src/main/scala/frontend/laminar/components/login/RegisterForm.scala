@@ -80,10 +80,20 @@ final class RegisterForm private (
       fieldSet(
         InputPassword("Password ", $changePW, $errors),
         passwordStrengthBar,
+        details(
+          summary("Why this bar?"),
+          p("This bar is supposed to give you an idea of the strength of your password."),
+          p("Don't worry if you do not fill it entirely, it's purely indicative and not necessarily accurate.")
+        ),
         InputPassword("Confirm password ", $changeConfirmPW, $errors)
       ),
       fieldSet(
-        InputString("Email ", formData.signal.map(_.email), $changeEmail)
+        InputString("Email ", formData.signal.map(_.email), $changeEmail),
+        details(
+          summary("Why do we need it?"),
+          p("We only use your address to send you an email when your registration has been accepted."),
+          p("Once we have sent that email, this piece of information is removed from our data.")
+        )
       ),
       input(tpe := "submit", value := "Sign up")
     )

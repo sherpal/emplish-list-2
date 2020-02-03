@@ -61,7 +61,7 @@ final class MainBoard private () extends Component[dom.html.Div] {
                 className := "main",
                 child <-- Routes
                   .firstOf(
-                    Route(root / "home" / endOfSegments, () => div(h1("Welcome to Emplish List!"))),
+                    Route(root / "home" / endOfSegments, () => Home()),
                     Route(root / "ingredients", () => IngredientBoard()),
                     Route(root / "new-ingredient", () => NewIngredient()),
                     Route(Recipes.topLevelPath / endOfSegments, () => RecipeBoard()),

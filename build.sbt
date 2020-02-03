@@ -70,3 +70,5 @@ stage := {
   (stage in backend).value
 }
 //Compile / deployHeroku := (backend / Compile / deployHeroku).value
+
+// sbt clean stage backend/deploy
