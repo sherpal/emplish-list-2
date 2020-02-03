@@ -1,9 +1,9 @@
 package streams.sources
 
 import akka.NotUsed
-import akka.stream.{Attributes, Outlet, SourceShape}
 import akka.stream.scaladsl.Source
 import akka.stream.stage.{GraphStage, GraphStageLogic, OutHandler}
+import akka.stream.{Attributes, Outlet, SourceShape}
 import com.raquo.airstream.eventstream.EventStream
 import com.raquo.airstream.ownership.Owner
 

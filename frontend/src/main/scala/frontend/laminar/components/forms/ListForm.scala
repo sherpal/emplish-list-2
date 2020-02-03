@@ -1,10 +1,10 @@
 package frontend.laminar.components.forms
 
-import com.raquo.airstream.eventbus.{EventBus, WriteBus}
+import com.raquo.airstream.eventbus.WriteBus
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
-import frontend.{NewItemPictogram, TrashPictogram}
 import frontend.laminar.components.Component
+import frontend.{NewItemPictogram, TrashPictogram}
 import org.scalajs.dom
 import org.scalajs.dom.html.FieldSet
 import syntax.WithUnit

@@ -5,17 +5,17 @@ import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.components.Component
 import frontend.laminar.components.forms.{ListForm, SimpleForm, Tags}
-import frontend.laminar.components.helpers.{InputSearch, InputTags}
 import frontend.laminar.components.helpers.forms.InputString
+import frontend.laminar.components.helpers.{InputSearch, InputTags}
 import frontend.laminar.utils.ActorSystemContainer
 import frontend.utils.http.DefaultHttp._
+import io.circe.generic.auto._
 import models.emplishlist.{Ingredient, IngredientUnit, Store}
 import models.errors.BackendError
 import models.validators.FieldsValidator
 import org.scalajs.dom.html.Form
 import sttp.client.Response
 import syntax.WithUnit
-import io.circe.generic.auto._
 
 import scala.util.{Failure, Success}
 

@@ -1,7 +1,6 @@
 package frontend
 
 import scala.language.implicitConversions
-
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 

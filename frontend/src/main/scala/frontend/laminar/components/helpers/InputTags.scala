@@ -1,8 +1,8 @@
 package frontend.laminar.components.helpers
 
+import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.components.Component
-import com.raquo.laminar.api.L._
 import org.scalajs.dom
 
 final class InputTags($tags: Observable[List[String]], tagsWriter: Observer[List[String]])

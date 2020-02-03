@@ -5,16 +5,16 @@ import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.components.Component
 import frontend.laminar.router.Router
 import frontend.laminar.utils.{ActorSystemContainer, InfoDownloader}
+import frontend.utils.http.DefaultHttp._
+import io.circe.generic.auto._
 import models.users.PendingRegistration
 import org.scalajs.dom
 import org.scalajs.dom.html.Div
-import io.circe.generic.auto._
-import urldsl.errors.DummyError
-import urldsl.language.{PathSegment, PathSegmentWithQueryParams, QueryParameters}
-import urldsl.language.QueryParameters.dummyErrorImpl.{param => qParam}
-import urldsl.language.PathSegment.dummyErrorImpl._
-import frontend.utils.http.DefaultHttp._
 import sttp.client.ignore
+import urldsl.errors.DummyError
+import urldsl.language.PathSegment.dummyErrorImpl._
+import urldsl.language.QueryParameters.dummyErrorImpl.{param => qParam}
+import urldsl.language.{PathSegment, PathSegmentWithQueryParams, QueryParameters}
 
 import scala.util.{Failure, Success}
 

@@ -1,6 +1,5 @@
 package frontend.laminar.components
 
-import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import org.scalajs.dom
 

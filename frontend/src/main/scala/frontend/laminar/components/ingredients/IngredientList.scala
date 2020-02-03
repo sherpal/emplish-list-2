@@ -1,6 +1,5 @@
 package frontend.laminar.components.ingredients
 
-import models.emplishlist.{Ingredient, IngredientQuantity}
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.NewItemPictogram
@@ -8,6 +7,7 @@ import frontend.laminar.components.forms.Tags
 import frontend.laminar.components.helpers.InputTags
 import frontend.laminar.router.Link
 import frontend.utils.basket.BasketLoader
+import models.emplishlist.{Ingredient, IngredientQuantity}
 import org.scalajs.dom.html
 import urldsl.language.PathSegment.dummyErrorImpl._
 

@@ -6,12 +6,11 @@ import frontend.TrashPictogram
 import frontend.laminar.components.Component
 import frontend.laminar.router.Router
 import frontend.laminar.utils.{ActorSystemContainer, InfoDownloader}
+import frontend.utils.http.DefaultHttp._
 import org.scalajs.dom
 import org.scalajs.dom.html.Div
-import frontend.utils.http.DefaultHttp._
 import protocole.Users
 import sttp.client.ignore
-import urldsl.language.QueryParameters.dummyErrorImpl.{param => qParam}
 
 final class ViewUsers private ()(implicit actorSystemContainer: ActorSystemContainer) extends Component[dom.html.Div] {
   import actorSystemContainer._

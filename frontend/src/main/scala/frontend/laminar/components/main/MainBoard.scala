@@ -7,7 +7,10 @@ import frontend.laminar.components.basket.BasketBoard
 import frontend.laminar.components.headers.{GlobalHeader, Navigation}
 import frontend.laminar.components.ingredients.{IngredientBoard, NewIngredient}
 import frontend.laminar.components.recipes.{RecipeBoard, RecipeDisplayContainer, RecipeEditorContainer}
+import frontend.laminar.components.users.{AcceptUser, ViewUsers}
+import frontend.laminar.fixlaminar.Fixes
 import frontend.laminar.router.{Route, Router, Routes}
+import frontend.utils.Recipes
 import frontend.utils.http.DefaultHttp._
 import io.circe.generic.auto._
 import models.users.User
@@ -15,9 +18,6 @@ import org.scalajs.dom
 import sttp.client._
 import urldsl.language.PathSegment.dummyErrorImpl._
 import urldsl.language.QueryParameters.dummyErrorImpl.{param => qParam}
-import frontend.laminar.components.users.{AcceptUser, ViewUsers}
-import frontend.laminar.fixlaminar.Fixes
-import frontend.utils.Recipes
 
 import scala.concurrent.ExecutionContext.Implicits.global
 

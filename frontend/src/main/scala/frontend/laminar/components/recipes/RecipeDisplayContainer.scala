@@ -5,10 +5,10 @@ import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.components.Component
 import frontend.laminar.router.Router
 import frontend.laminar.utils.{ActorSystemContainer, InfoDownloader}
+import io.circe.generic.auto._
 import models.emplishlist.Recipe
 import org.scalajs.dom
 import org.scalajs.dom.html.Div
-import io.circe.generic.auto._
 import urldsl.language.QueryParameters.dummyErrorImpl.{param => qParam}
 
 final class RecipeDisplayContainer(recipeId: Int)(implicit actorSystemContainer: ActorSystemContainer)

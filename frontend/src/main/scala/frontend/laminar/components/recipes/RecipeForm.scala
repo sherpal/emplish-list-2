@@ -6,19 +6,19 @@ import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.components.Component
 import frontend.laminar.components.forms.{FormGroup, ListForm, SimpleForm, Tags}
-import frontend.laminar.components.helpers.{InputSearch, InputTags}
 import frontend.laminar.components.helpers.forms.{InputInt, InputString, InputTextArea}
+import frontend.laminar.components.helpers.{InputSearch, InputTags}
 import frontend.laminar.router.Router
 import frontend.laminar.utils.ActorSystemContainer
 import frontend.utils.Recipes
 import frontend.utils.http.DefaultHttp._
-import models.emplishlist.{Ingredient, Recipe}
-import org.scalajs.dom
-import sttp.client.Response
 import io.circe.generic.auto._
 import models.emplishlist.forms.{UserEnteredIngredientQuantity, UserEnteredRecipe}
+import models.emplishlist.{Ingredient, Recipe}
 import models.errors.BackendError
 import models.validators.FieldsValidator
+import org.scalajs.dom
+import sttp.client.Response
 import syntax.WithUnit
 
 import scala.util.{Failure, Success}

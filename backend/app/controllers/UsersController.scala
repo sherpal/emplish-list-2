@@ -14,7 +14,6 @@ import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.http.HttpErrorHandler
 import play.api.mvc._
 import slick.jdbc.JdbcProfile
-import urldsl.url.{UrlStringDecoder, UrlStringParserGenerator}
 import utils.ReadsImplicits._
 import utils.WriteableImplicits._
 import utils.config.ConfigRequester.|>

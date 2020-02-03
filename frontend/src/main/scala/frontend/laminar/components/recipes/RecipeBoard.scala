@@ -1,13 +1,13 @@
 package frontend.laminar.components.recipes
 
-import com.raquo.laminar.nodes.ReactiveHtmlElement
 import com.raquo.laminar.api.L._
+import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.components.Component
 import frontend.laminar.utils.{ActorSystemContainer, InfoDownloader}
-import org.scalajs.dom
-import org.scalajs.dom.html.Div
 import io.circe.generic.auto._
 import models.emplishlist.Recipe
+import org.scalajs.dom
+import org.scalajs.dom.html.Div
 
 final class RecipeBoard private ()(implicit actorSystemContainer: ActorSystemContainer)
     extends Component[dom.html.Div] {

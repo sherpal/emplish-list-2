@@ -4,10 +4,10 @@ import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.components.Component
 import frontend.laminar.utils.{ActorSystemContainer, InfoDownloader}
+import io.circe.generic.auto._
 import models.emplishlist.{Ingredient, Recipe}
 import org.scalajs.dom
 import org.scalajs.dom.html.Div
-import io.circe.generic.auto._
 import urldsl.language.QueryParameters.dummyErrorImpl.{param => qParam}
 
 /**

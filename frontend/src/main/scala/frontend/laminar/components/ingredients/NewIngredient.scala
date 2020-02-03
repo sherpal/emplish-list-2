@@ -4,10 +4,10 @@ import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.components.Component
 import frontend.laminar.utils.{ActorSystemContainer, InfoDownloader}
+import io.circe.generic.auto._
 import models.emplishlist.{Ingredient, IngredientUnit, Store}
 import org.scalajs.dom
 import org.scalajs.dom.html
-import io.circe.generic.auto._
 
 final class NewIngredient()(implicit actorSystemContainer: ActorSystemContainer) extends Component[dom.html.Div] {
   import actorSystemContainer._

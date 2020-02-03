@@ -1,9 +1,9 @@
 package frontend.laminar.components.ingredients
 
 import com.raquo.laminar.api.L
-import frontend.laminar.components.forms.FormGroup
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
+import frontend.laminar.components.forms.FormGroup
 import frontend.laminar.components.helpers.InputSearch
 import models.emplishlist.Store
 import org.scalajs.dom
