@@ -15,7 +15,7 @@ import org.scalajs.dom
 import sttp.client._
 import urldsl.language.PathSegment.dummyErrorImpl._
 import urldsl.language.QueryParameters.dummyErrorImpl.{param => qParam}
-import frontend.laminar.components.users.AcceptUser
+import frontend.laminar.components.users.{AcceptUser, ViewUsers}
 import frontend.laminar.fixlaminar.Fixes
 import frontend.utils.Recipes
 
@@ -78,7 +78,8 @@ final class MainBoard private () extends Component[dom.html.Div] {
                       (root / "handle-registration").filter(_ => admin) ?
                         (qParam[String]("userName").? & qParam[String]("randomKey").?),
                       (_: Unit, matching: (Option[String], Option[String])) => AcceptUser(matching._1, matching._2)
-                    )
+                    ),
+                    Route((root / "view-users").filter(_ => admin), () => ViewUsers())
                   )
                   .map(_.getOrElse(emptyNode))
               )

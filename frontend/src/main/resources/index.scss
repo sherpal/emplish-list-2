@@ -33,21 +33,26 @@ header {
 
 nav {
     grid-area: navigation;
+
+    ul {
+        display: flex;
+        justify-content: space-around;
+        flex-direction: column;
+
+        li {
+            padding: 5px;
+        }
+    }
 }
 
 ul {
     list-style-type: none;
 }
 
-nav > ul {
-    display: flex;
-    justify-content: space-around;
-    flex-direction: column;
+li:hover {
+    border: 1px solid black;
 }
 
-nav > ul > li {
-    padding: 5px;
-}
 
 nav > ul > li:hover {
     background-color: #0000ff;
@@ -98,4 +103,12 @@ fieldset {
     div {
         margin: 5px;
     }
+}
+
+.selected {
+    background-color: rgba(100, 100, 100, 0.3);
+}
+
+tr:hover {
+    border: 1px solid black;
 }

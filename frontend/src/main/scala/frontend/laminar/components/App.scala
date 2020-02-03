@@ -24,7 +24,8 @@ object App {
     "new-ingredient",
     "recipes",
     "basket",
-    "handle-registration"
+    "handle-registration",
+    "view-users"
   )
 
   def apply(): ReactiveHtmlElement[html.Div] = div(

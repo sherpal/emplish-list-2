@@ -39,6 +39,9 @@ trait Users extends MonixDB {
   def selectUser(userName: UserName): Task[Option[DBUser]] =
     runAsTask(query.filter(_.name === userName).result.headOption)
 
+  def deleteUser(userName: UserName): Task[Int] =
+    runAsTask(query.filter(_.name === userName).delete)
+
   def userExists(userName: UserName): Task[Boolean] =
     runAsTask(query.filter(_.name === userName).result.headOption).map(_.isDefined)
 

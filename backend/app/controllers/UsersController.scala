@@ -14,8 +14,10 @@ import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.http.HttpErrorHandler
 import play.api.mvc._
 import slick.jdbc.JdbcProfile
+import urldsl.url.{UrlStringDecoder, UrlStringParserGenerator}
 import utils.ReadsImplicits._
 import utils.WriteableImplicits._
+import utils.config.ConfigRequester.|>
 import utils.database.tables.UsersTable
 import utils.database.tables.UsersTable.{Password, UserName}
 import utils.mail.InviteEmails
@@ -38,6 +40,8 @@ final class UsersController @Inject()(
     with Users
     with Registration
     with InviteEmails {
+
+  private def adminName = (|> >> "adminUser" >> "name").into[String]
 
   def user: Action[AnyContent] = authGuard() { implicit request: UserAction.SessionRequest[AnyContent] =>
     Ok(User(request.userId, request.userName))
@@ -134,6 +138,11 @@ final class UsersController @Inject()(
   def rejectPreRegisteredUser(userName: UserName, randomKey: String): Action[AnyContent] = authGuard.admin.async {
     implicit request =>
       rejectUser(userName, randomKey).map(Ok(_)).runToFuture
+  }
+
+  def deleteUserRoute(userName: UserName): Action[AnyContent] = authGuard.admin.async {
+    if (userName == adminName) Future.successful(BadRequest("You may not delete the boss!"))
+    else deleteUser(userName).map(Ok(_)).runToFuture
   }
 
 }

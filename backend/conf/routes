@@ -19,6 +19,7 @@ POST    /api/register                          controllers.UsersController.regis
 GET     /api/users/all-users-names             controllers.UsersController.usersNames
 POST    /api/accept-user                       controllers.UsersController.addPreRegisteredUser(userName, randomKey)
 POST    /api/reject-user                       controllers.UsersController.rejectPreRegisteredUser(userName, randomKey)
+POST    /api/delete-user                       controllers.UsersController.deleteUserRoute(userName)
 GET     /api/registration/registration-email                controllers.UsersController.pendingRegistrationEmail(userName, randomKey)
 GET     /api/registration/pending-registrations             controllers.UsersController.downloadPendingRegistrations(limit: Int = 5)
 GET     /api/registration/pending-registrations/:limit      controllers.UsersController.downloadPendingRegistrations(limit: Int)
