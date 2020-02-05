@@ -5,8 +5,11 @@ import models.errors.{BackendError, BackendException}
 import models.users.PendingRegistration
 import monix.eval.Task
 import views.html
+import utils.config.ConfigRequester.|>
 
 trait InviteEmails {
+
+  def origin: String = (|> >> "origin").into[String]
 
   private def mailObject =
     for {
@@ -30,7 +33,12 @@ trait InviteEmails {
           Mail.mailAddress,
           "New Registration",
           (registration: PendingRegistration) =>
-            html.registrationemail(registration.name, registration.email, registration.randomKey),
+            html.registrationemail(
+              registration.name,
+              registration.email,
+              registration.randomKey,
+              origin
+            ),
           pendingRegistration
         )
       )
@@ -44,7 +52,7 @@ trait InviteEmails {
         mail.sendTwirlEmail(
           new InternetAddress(email),
           "Welcome to Emplish List!",
-          (_: Unit) => html.welcomeemail(userName)
+          (_: Unit) => html.welcomeemail(userName, origin)
         )
       )
     } yield Right[BackendError, Boolean](true)).recoverFromBackendException

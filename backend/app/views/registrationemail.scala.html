@@ -1,4 +1,4 @@
-@(userName: String, userEmail: String, randomKey: String)
+@(userName: String, userEmail: String, randomKey: String, urlOrigin: String)
 
 
 <h1>New Registration</h1>
@@ -13,6 +13,5 @@
     <li>email: @userEmail</li>
 </ul>
 <p>
-    // TODO: fix the host
-    Go to http://localhost:8080/handle-registration?randomKey=@randomKey&userName=@userName to decide their fate.
+    Go to @{urlOrigin}/handle-registration?randomKey=@randomKey&userName=@userName to decide their fate.
 </p>
