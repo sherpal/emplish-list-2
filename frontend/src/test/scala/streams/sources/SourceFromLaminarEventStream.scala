@@ -7,8 +7,8 @@ import akka.testkit.{ImplicitSender, TestKit}
 import com.raquo.airstream.eventbus.EventBus
 import com.raquo.airstream.ownership.Owner
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
-import streams.sinks.WriteToBus._
-import streams.sources.ReadFromEventStream._
+import streams.sinks.WriteToObserver._
+import streams.sources.ReadFromObservable._
 
 import scala.concurrent.duration._
 
@@ -30,7 +30,7 @@ final class SourceFromLaminarEventStream()
       val bus = new EventBus[Int]()
       bus.events.foreach(println)(new Owner {})
 
-      Source(List(1, 2, 3)).runWith(Sink.writeToBus(bus.writer))
+      Source(List(1, 2, 3)).runWith(Sink.writeToObserver(bus.writer))
 
     }
 
@@ -43,9 +43,9 @@ final class SourceFromLaminarEventStream()
       val source1 = Source(List(1, 2, 3)).delay(1.second)
       val bus = new EventBus[Int]()
 
-      source1.runWith(Sink.writeToBus(bus.writer))
+      source1.runWith(Sink.writeToObserver(bus.writer))
 
-      val source2 = Source.readFromEventStream(bus.events)
+      val source2 = Source.readFromObservable(bus.events)
 
       source2.take(3).runWith(TestSink.probe[Int]).expectNext(1, 2, 3).expectComplete()
       //source2.take(3).runWith(Sink.foreach(x => println("hey: " + x)))

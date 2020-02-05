@@ -8,8 +8,8 @@ import com.raquo.airstream.eventstream.EventStream
 import com.raquo.laminar.api.L._
 import models.errors.BackendError
 import models.validators.FieldsValidator
-import streams.sinks.WriteToBus._
-import streams.sources.ReadFromEventStream._
+import streams.sinks.WriteToObserver._
+import streams.sources.ReadFromObservable._
 import syntax.WithUnit
 
 import scala.concurrent.ExecutionContext
@@ -45,7 +45,7 @@ trait SimpleForm[FormData] {
 
   val validator: FieldsValidator[FormData, BackendError]
 
-  private val formDataSink = Sink.writeToBus(formDataEventWriter)
+  private val formDataSink = Sink.writeToObserver(formDataEventWriter)
   private val errorsSink = Sink.foreach(errorsWriter.onNext)
 
   private val debugSink = Flow[FormData]
@@ -55,7 +55,7 @@ trait SimpleForm[FormData] {
     )
 
   private val formSource: RunnableGraph[NotUsed] = Source
-    .readFromEventStream(formDataChanger.events)
+    .readFromObservable(formDataChanger.events)
     .scan(formDataWithUnit.unit) { case (form, changer) => changer(form) }
     .alsoTo(debugSink)
     .alsoTo(formDataSink)

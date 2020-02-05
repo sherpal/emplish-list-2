@@ -8,6 +8,7 @@ import frontend.laminar.components.Component
 import frontend.laminar.components.forms.{FormGroup, ListForm, SimpleForm}
 import frontend.laminar.components.helpers.InputSearch
 import frontend.laminar.components.helpers.forms.{InputInt, InputString}
+import frontend.utils.basket.BasketLoader
 import models.emplishlist.basket.Basket
 import models.emplishlist.forms.UserEnteredIngredientQuantity
 import models.emplishlist.{Ingredient, Recipe, RecipeQuantity}
@@ -46,6 +47,11 @@ final class MakeBasket private (
   val extraIngredientsBus: EventBus[List[UserEnteredIngredientQuantity]] = new EventBus()
   extraIngredientsBus.events.foreach(extraIngredientsChanger.onNext)
 
+  def clearBasket(): Unit = {
+    BasketLoader.clearBasket()
+    createFormDataChanger[Basket](b => _ => b).onNext(formDataWithUnit.unit)
+  }
+
   val element: ReactiveHtmlElement[html.Div] = {
     run()
 
@@ -56,6 +62,9 @@ final class MakeBasket private (
     )
 
     div(
+      section(
+        p(button(onClick --> (_ => clearBasket()), "Clear basket"))
+      ),
       section(
         h2("Recipes"),
         ListForm[RecipeQuantity](

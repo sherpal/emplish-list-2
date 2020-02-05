@@ -12,7 +12,7 @@ import models.emplishlist.basket.Basket
 import models.emplishlist.{Ingredient, Recipe}
 import org.scalajs.dom
 import org.scalajs.dom.html
-import streams.sources.ReadFromEventStream._
+import streams.sources.ReadFromObservable._
 
 import scala.concurrent.duration._
 
@@ -42,10 +42,8 @@ object BasketBoard {
       BasketLoader.saveBasket(basket.now)
     }
 
-    dom.window.addEventListener("beforeunload", savingBasket)
-
     Source
-      .readFromEventStream(basket.signal.changes)
+      .readFromObservable(basket.signal.changes)
       .groupedWithin(200, 1.second)
       .map(_.last)
       .wireTap(_ => println("Saving basket"))
@@ -56,18 +54,12 @@ object BasketBoard {
       basket.update(_ => savedBasket)
     }
 
-    def clearBasket(): Unit = {
-      BasketLoader.clearBasket()
-      basket.update(_ => Basket.empty)
-    }
-
     implicit val element: ReactiveHtmlElement[html.Div] = div(
       Fixes.readMountEvents,
       child <-- maybeRecipesAndIngredients.map {
         case (recipes, ingredients) =>
           div(
             h1("Create your basket"),
-            p(button(onClick --> (_ => clearBasket()), "Clear basket")),
             child <-- finished.signal.map {
               if (_) FinalList(basket.signal.map(_.allIngredients), finished.writer)
               else MakeBasket(basket.writer, recipes, ingredients, finished.writer, basket.now)
@@ -81,8 +73,10 @@ object BasketBoard {
     element.subscribe(_.mountEvents) {
       case NodeDidMount =>
         println("Basket did mount")
+        dom.window.addEventListener("beforeunload", savingBasket)
       case NodeWillUnmount =>
         println("Basket will unmount")
+        dom.window.removeEventListener("beforeunload", savingBasket)
       case NodeWasDiscarded =>
         println("Basket was discarded")
     }

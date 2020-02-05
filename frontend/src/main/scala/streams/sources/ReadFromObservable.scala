@@ -4,14 +4,14 @@ import akka.NotUsed
 import akka.stream.scaladsl.Source
 import akka.stream.stage.{GraphStage, GraphStageLogic, OutHandler}
 import akka.stream.{Attributes, Outlet, SourceShape}
-import com.raquo.airstream.eventstream.EventStream
+import com.raquo.airstream.core.Observable
 import com.raquo.airstream.ownership.Owner
 
 import scala.collection.mutable
 
-object ReadFromEventStream {
+object ReadFromObservable {
 
-  private class EventStreamSource[Out](eventStream: EventStream[Out]) extends GraphStage[SourceShape[Out]] {
+  private class EventStreamSource[Out](observable: Observable[Out]) extends GraphStage[SourceShape[Out]] {
 
     val outlet: Outlet[Out] = Outlet("EventStreamSource")
 
@@ -31,7 +31,7 @@ object ReadFromEventStream {
         }
       }
 
-      eventStream.foreach(inHandlerLike)(owner)
+      observable.foreach(inHandlerLike)(owner)
 
       setHandler(
         outlet,
@@ -52,11 +52,11 @@ object ReadFromEventStream {
     def shape: SourceShape[Out] = SourceShape(outlet)
   }
 
-  private def apply[Out](stream: EventStream[Out]): Source[Out, NotUsed] =
-    Source.fromGraph(new EventStreamSource[Out](stream))
+  private def apply[Out](observable: Observable[Out]): Source[Out, NotUsed] =
+    Source.fromGraph(new EventStreamSource[Out](observable))
 
   implicit final class SourceEnhanced(s: Source.type) {
-    def readFromEventStream[Out](stream: EventStream[Out]): Source[Out, NotUsed] = apply(stream)
+    def readFromObservable[Out](observable: Observable[Out]): Source[Out, NotUsed] = apply(observable)
   }
 
 }
