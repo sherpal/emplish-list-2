@@ -9,7 +9,8 @@ import models.emplishlist.{Ingredient, IngredientUnit, Store}
 import org.scalajs.dom
 import org.scalajs.dom.html
 
-final class NewIngredient()(implicit actorSystemContainer: ActorSystemContainer) extends Component[dom.html.Div] {
+final class NewIngredient(maybeIngredientId: Option[Int])(implicit actorSystemContainer: ActorSystemContainer)
+    extends Component[dom.html.Div] {
   import actorSystemContainer._
 
   val lastAddedIngredient: Var[Option[Ingredient]] = Var(None)
@@ -28,7 +29,7 @@ final class NewIngredient()(implicit actorSystemContainer: ActorSystemContainer)
     div(
       child <-- lastAddedIngredient.signal.map {
         case Some(ingredient) => div(s"Ingredient ${ingredient.name} was successfully added!")
-        case None             => div()
+        case None             => emptyNode
       },
       child <-- $info.map {
         case (stores, units, ingredients) =>

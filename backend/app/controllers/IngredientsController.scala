@@ -35,16 +35,19 @@ final class IngredientsController @Inject()(
     with Units {
 
   def allIngredients: Action[AnyContent] = authGuard().async {
-    implicit request: UserAction.SessionRequest[AnyContent] =>
-      ingredients.map(Ok(_)).runToFuture
+    ingredients.map(Ok(_)).runToFuture
   }
 
-  def allUnits: Action[AnyContent] = authGuard().async { implicit request: UserAction.SessionRequest[AnyContent] =>
+  def allUnits: Action[AnyContent] = authGuard().async {
     units.map(Ok(_)).runToFuture
   }
 
-  def allStores: Action[AnyContent] = authGuard().async { implicit request: UserAction.SessionRequest[AnyContent] =>
+  def allStores: Action[AnyContent] = authGuard().async {
     stores.map(Ok(_)).runToFuture
+  }
+
+  def fetchIngredient(ingredientId: Int): Action[AnyContent] = authGuard().async {
+    ingredientById(ingredientId).map(Ok(_)).runToFuture
   }
 
   def newIngredient: Action[Ingredient] = authGuard().async(parse.json[Ingredient]) {
@@ -74,7 +77,25 @@ final class IngredientsController @Inject()(
   def updateIngredientRoute(): Action[Ingredient] = authGuard().async(parse.json[Ingredient]) {
     implicit request: UserAction.SessionRequest[Ingredient] =>
       val ingredient = request.body
-      updateIngredient(ingredient).map(Ok(_)).runToFuture
+
+      (for {
+        ings <- Vector[Ingredient]().pure[Task] // don't need to check that ingredient exist
+        us <- units
+        ss <- stores
+        validator = Ingredient.validator(ings, us, ss)
+        errors = validator(ingredient).pure[Option].filter(_.nonEmpty)
+        finalErrors <- errors match {
+          case Some(es) => es.pure[Task]
+          case None =>
+            for {
+              ingredientUpdated <- updateIngredient(ingredient)
+              error = if (ingredientUpdated) Map[String, List[BackendError]]()
+              else Map("name" -> BackendError("validator.ingredientDoesNotExist", ingredient.name).pure[List])
+            } yield error
+        }
+      } yield finalErrors)
+        .map(errors => if (errors.isEmpty) Ok else BadRequest(errors))
+        .runToFuture
   }
 
   def tags: Action[AnyContent] = authGuard().async {

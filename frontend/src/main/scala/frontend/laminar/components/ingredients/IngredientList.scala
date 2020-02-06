@@ -18,6 +18,7 @@ private[ingredients] object IngredientList {
     td(ingredient.unit.name),
     td(
       span(
+        title := "Add to basket",
         className := "clickable",
         img(src := NewItemPictogram.asInstanceOf[String], alt := "add to basket", className := "icon-size"),
         onClick --> (_ => BasketLoader.addIngredient(IngredientQuantity(ingredient, 1)))

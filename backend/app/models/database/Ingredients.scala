@@ -2,7 +2,7 @@ package models.database
 
 import cats.syntax.applicative._
 import models.emplishlist.Ingredient
-import models.emplishlist.db.DBIngredient
+import models.emplishlist.db.{DBIngredient, DBStore}
 import monix.eval.Task
 import utils.database.DBProfile.api._
 import utils.database.tables.{IngredientTable, IngredientsInStoresTable, StoresTable}
@@ -29,6 +29,25 @@ trait Ingredients extends MonixDB with Stores {
   def getIngredient(ingredient: Ingredient): Task[Option[DBIngredient]] =
     runAsTask(query.filter(_.name === ingredient.name).take(1).result.headOption)
 
+  def ingredientById(ingredientId: Int): Task[Option[Ingredient]] =
+    for {
+      maybeIngredient <- runAsTask(query.filter(_.id === ingredientId).take(1).result.headOption)
+      dbStores <- maybeIngredient
+        .map(_.id)
+        .map(
+          id =>
+            runAsTask(
+              IngredientsInStoresTable.query
+                .filter(_.ingredientId === id)
+                .join(StoresTable.query)
+                .on(_.storeId === _.id)
+                .map(_._2)
+                .result
+            )
+        )
+        .getOrElse(Task(Vector[DBStore]()))
+    } yield maybeIngredient.map(_.toIngredient(dbStores.toList))
+
   private def addIngredientWithStoreInfo(ingredient: Ingredient): Task[Unit] =
     for {
       _ <- runAsTask(query += ingredient.toDBIngredient)
@@ -54,19 +73,24 @@ trait Ingredients extends MonixDB with Stores {
       added <- if (alreadyExists) false.pure[Task] else addIngredientWithStoreInfo(ingredient).map(_ => true)
     } yield added
 
-  def updateIngredient(ingredient: Ingredient): Task[Unit] =
+  def updateIngredient(ingredient: Ingredient): Task[Boolean] =
     for {
       exists <- ingredientExists(ingredient)
       _ <- if (exists)
         runAsTask(
-          DBIO.seq(
-            query.filter(_.id === ingredient.id).map(_.unitName).update(ingredient.unit.name),
-            IngredientsInStoresTable.query.filter(_.ingredientId === ingredient.id).delete,
-            IngredientsInStoresTable.query ++= ingredient.ingredientsInStore
-          )
+          DBIO
+            .seq(
+              query
+                .filter(_.id === ingredient.id)
+                .map(i => (i.unitName, i.tags))
+                .update((ingredient.unit.name, ingredient.toDBIngredient.tagsAsString)),
+              IngredientsInStoresTable.query.filter(_.ingredientId === ingredient.id).delete,
+              IngredientsInStoresTable.query ++= ingredient.ingredientsInStore
+            )
+            .transactionally
         )
       else Task.pure(())
-    } yield ()
+    } yield exists
 
   def allIngredientsTag: Task[Vector[String]] =
     runAsTask(query.map(_.tags).distinct.result).map(_.toVector.flatMap(_.split(" ").toVector).distinct)

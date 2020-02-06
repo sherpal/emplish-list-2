@@ -26,6 +26,7 @@ GET     /api/registration/pending-registrations/:limit      controllers.UsersCon
 
 # Ingredients
 GET     /api/ingredients/ingredients                controllers.IngredientsController.allIngredients
+GET     /api/ingredients/get-ingredient             controllers.IngredientsController.fetchIngredient(id: Int)
 GET     /api/ingredients/units                      controllers.IngredientsController.allUnits
 GET     /api/ingredients/stores                     controllers.IngredientsController.allStores
 GET     /api/ingredients/tags                       controllers.IngredientsController.tags
