@@ -63,7 +63,8 @@ final class MainBoard private () extends Component[dom.html.Div] {
                   .firstOf(
                     Route(root / "home" / endOfSegments, () => Home()),
                     Route(root / "ingredients", () => IngredientBoard()),
-                    Route(root / "new-ingredient", () => NewIngredient()),
+                    Route(root / "new-ingredient", () => NewIngredient(None)),
+                    Route(root / "update-ingredient" / segment[Int], (id: Int) => NewIngredient(Some(id))),
                     Route(Recipes.topLevelPath / endOfSegments, () => RecipeBoard()),
                     Route(
                       Recipes.editorPath / (segment[Int] || "new"),

@@ -16,14 +16,16 @@ import models.validators.FieldsValidator
 import org.scalajs.dom.html.Form
 import sttp.client.Response
 import syntax.WithUnit
+import urldsl.language.QueryParameters.dummyErrorImpl.{param => qParam}
 
 import scala.util.{Failure, Success}
 
 final class NewIngredientForm(
+    initialIngredient: Option[Ingredient],
     ingredients: Vector[Ingredient],
     units: Vector[IngredientUnit],
     stores: Vector[Store],
-    lastIngredientAdded: Observer[Ingredient]
+    lastIngredientAdded: Observer[(Ingredient, Boolean)]
 )(
     implicit val actorSystem: ActorSystem,
     val formDataWithUnit: WithUnit[Ingredient]
@@ -36,14 +38,24 @@ final class NewIngredientForm(
       case m if m.isEmpty =>
         println("no error, should send to server")
         boilerplate
-          .post(path("ingredients", "add-ingredient"))
+          .post(
+            initialIngredient match {
+              case Some(ingredient) =>
+                pathWithMultipleParams(
+                  qParam[Int]("id").createParamsMap(ingredient.id),
+                  "ingredients",
+                  "update-ingredient"
+                )
+              case None => path("ingredients", "add-ingredient")
+            }
+          )
           .body(formData.now)
           .response(responseAs[Ingredient])
           .send()
           .onComplete {
             case Success(Response(Right(Right(ingredient)), _, _, _, _)) =>
               clearForm()
-              lastIngredientAdded.onNext(ingredient)
+              lastIngredientAdded.onNext((ingredient, initialIngredient.isEmpty))
             case Success(Response(Left(Right(errors)), _, _, _, _)) =>
               println(errors)
               errorsWriter.onNext(errors)
@@ -67,6 +79,12 @@ final class NewIngredientForm(
     val tagsChanger = createFormDataChanger((tags: List[String]) => _.copy(tags = tags))
 
     run()
+
+    initialIngredient match {
+      case Some(ingredient) => createFormDataChanger[Ingredient](ingredient => _ => ingredient).onNext(ingredient)
+      case None => // do nothing
+    }
+    
 
     form(
       onSubmit.preventDefault --> (_ => submit()),
@@ -105,16 +123,17 @@ final class NewIngredientForm(
 object NewIngredientForm {
 
   def apply(
+      initialIngredient: Option[Ingredient],
       ingredients: Vector[Ingredient],
       units: Vector[IngredientUnit],
       stores: Vector[Store],
-      lastIngredientAdded: Observer[Ingredient]
+      lastIngredientAdded: Observer[(Ingredient, Boolean)]
   )(
       implicit actorSystemContainer: ActorSystemContainer,
       formDataWithUnit: WithUnit[Ingredient]
   ): NewIngredientForm = {
     import actorSystemContainer._
-    new NewIngredientForm(ingredients, units, stores, lastIngredientAdded)
+    new NewIngredientForm(initialIngredient, ingredients, units, stores, lastIngredientAdded)
   }
 
 }

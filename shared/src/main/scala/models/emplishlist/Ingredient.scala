@@ -31,12 +31,11 @@ object Ingredient {
   ): FieldsValidator[Ingredient, BackendError] =
     FieldsValidator(
       Map(
-        "name" -> (nonEmptyString ++
+        "name" -> (nonEmptyString.contraMap[Ingredient](_.name) ++
           simpleValidator(
-            (name: String) => !ingredients.exists(_.name == name),
-            BackendError("validator.ingredientExists", _)
-          ))
-          .contraMap[Ingredient](_.name),
+            (ingredient: Ingredient) => ingredient.id != 0 || !ingredients.exists(_.name == ingredient.name),
+            (ingredient: Ingredient) => BackendError("validator.ingredientExists", ingredient.name))
+          ),
         "unit" -> simpleValidator[IngredientUnit, BackendError](
           units.contains,
           unit => BackendError("validator.unitDoesNotExist", unit.name)

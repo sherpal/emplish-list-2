@@ -22,6 +22,7 @@ object App {
     "home",
     "ingredients",
     "new-ingredient",
+    "update-ingredient",
     "recipes",
     "basket",
     "handle-registration",

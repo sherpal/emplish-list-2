@@ -10,11 +10,18 @@ import frontend.utils.basket.BasketLoader
 import models.emplishlist.{Ingredient, IngredientQuantity}
 import org.scalajs.dom.html
 import urldsl.language.PathSegment.dummyErrorImpl._
+import frontend.laminar.router.Router
 
 private[ingredients] object IngredientList {
 
   private def row(ingredient: Ingredient) = tr(
-    td(ingredient.name),
+    td(
+      className := "clickable",
+      onClick.mapTo(ingredient.id) --> (id => Router.router.moveTo(
+        "/" + (root / "update-ingredient" / segment[Int]).createPath(id)
+        )),
+      ingredient.name
+      ),
     td(ingredient.unit.name),
     td(
       span(

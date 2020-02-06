@@ -94,7 +94,7 @@ final class IngredientsController @Inject()(
             } yield error
         }
       } yield finalErrors)
-        .map(errors => if (errors.isEmpty) Ok else BadRequest(errors))
+        .map(errors => if (errors.isEmpty) Ok(ingredient) else BadRequest(errors))
         .runToFuture
   }
 

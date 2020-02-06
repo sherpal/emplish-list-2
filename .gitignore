@@ -7,7 +7,7 @@ data
 
 .bloop
 .metals
-
+project/metals.sbt
 
 project/target
 project/project/target
