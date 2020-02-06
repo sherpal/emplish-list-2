@@ -77,6 +77,6 @@ fieldset {
   background-color: rgba(100, 100, 100, 0.3); }
 
 tr:hover {
-  border: 1px solid black; }
+  background-color: rgba(0, 0, 0, 0.3); }
 
 /*# sourceMappingURL=index.css.map */
