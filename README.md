@@ -16,7 +16,7 @@ The frontend uses the Laminar framework for UI rendering.
 ## Deploy
 
 The app is hosted on Heroku. In order to deploy, after logged into
-Heroku, simply type in:
+Heroku (using the command `heroku login`), simply type in:
 ```
 export SBT_OPTS="-Xmx6G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=6G -Xss2M  -Duser.timezone=GMT"
 sbt clean stage backend/deployHeroku

@@ -82,9 +82,8 @@ final class NewIngredientForm(
 
     initialIngredient match {
       case Some(ingredient) => createFormDataChanger[Ingredient](ingredient => _ => ingredient).onNext(ingredient)
-      case None => // do nothing
+      case None             => // do nothing
     }
-    
 
     form(
       onSubmit.preventDefault --> (_ => submit()),

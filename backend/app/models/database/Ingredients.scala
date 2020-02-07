@@ -75,7 +75,7 @@ trait Ingredients extends MonixDB with Stores {
 
   def updateIngredient(ingredient: Ingredient): Task[Boolean] =
     for {
-      exists <- ingredientExists(ingredient)
+      exists <- runAsTask(query.filter(_.id === ingredient.id).take(1).result.headOption).map(_.isDefined)
       _ <- if (exists)
         runAsTask(
           DBIO
