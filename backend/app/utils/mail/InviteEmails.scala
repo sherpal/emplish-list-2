@@ -4,8 +4,8 @@ import javax.mail.internet.InternetAddress
 import models.errors.{BackendError, BackendException}
 import models.users.PendingRegistration
 import monix.eval.Task
-import views.html
 import utils.config.ConfigRequester.|>
+import views.html
 
 trait InviteEmails {
 
