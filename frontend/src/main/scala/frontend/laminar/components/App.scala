@@ -6,6 +6,7 @@ import frontend.AppCSS
 import frontend.laminar.components.helpers.Redirect
 import frontend.laminar.components.login.{AfterRegister, Login, Register}
 import frontend.laminar.components.main.MainBoard
+import frontend.laminar.components.tests.TestComponent
 import frontend.laminar.fixlaminar.Fixes
 import frontend.laminar.router.{Route, Routes}
 import org.scalajs.dom.html
@@ -29,6 +30,8 @@ object App {
     "view-users"
   )
 
+  private val testRoute = (r / "test").filter(_ => scala.scalajs.LinkingInfo.developmentMode)
+
   def apply(): ReactiveHtmlElement[html.Div] = div(
     Fixes.readMountEvents,
     child <-- Routes
@@ -37,7 +40,8 @@ object App {
         Route(mainBoardRoutes, () => MainBoard()),
         Route(r / "login", () => Login()),
         Route(r / "sign-up", () => Register()),
-        Route(r / "after-registration", () => AfterRegister())
+        Route(r / "after-registration", () => AfterRegister()),
+        Route(testRoute, () => TestComponent())
       )
       .map {
         case Some(elem) => elem

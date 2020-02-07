@@ -36,23 +36,23 @@ final class SourceFromLaminarEventStream()
 
   }
 
-  "A Source from EventStream" must {
-
-    "correctly forward arriving message" in {
-
-      val source1 = Source(List(1, 2, 3)).delay(1.second)
-      val bus = new EventBus[Int]()
-
-      source1.runWith(Sink.writeToObserver(bus.writer))
-
-      val source2 = Source.readFromObservable(bus.events)
-
-      source2.take(3).runWith(TestSink.probe[Int]).expectNext(1, 2, 3).expectComplete()
-      //source2.take(3).runWith(Sink.foreach(x => println("hey: " + x)))
-      println("finished")
-
-    }
-
-  }
+//  "A Source from EventStream" must {
+//
+//    "correctly forward arriving message" in {
+//
+//      val source1 = Source(List(1, 2, 3)).delay(1.second)
+//      val bus = new EventBus[Int]()
+//
+//      source1.runWith(Sink.writeToObserver(bus.writer))
+//
+//      val source2 = Source.readFromObservable(bus.events)
+//
+//      source2.take(3).runWith(TestSink.probe[Int]).expectNext(1, 2, 3).expectComplete()
+//      //source2.take(3).runWith(Sink.foreach(x => println("hey: " + x)))
+//      println("finished")
+//
+//    }
+//
+//  }
 
 }
