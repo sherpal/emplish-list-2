@@ -49,10 +49,6 @@ ul {
     list-style-type: none;
 }
 
-li:hover {
-    border: 1px solid black;
-}
-
 
 nav > ul > li:hover {
     background-color: #0000ff;
@@ -67,6 +63,13 @@ a {
 table, th, td {
   border-collapse: collapse;
   padding: 5px;
+}
+
+.ellipsis-td {
+    max-width: 200px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .search-list-ul {

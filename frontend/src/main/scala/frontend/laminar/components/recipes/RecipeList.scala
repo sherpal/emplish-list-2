@@ -22,7 +22,8 @@ object RecipeList {
       dataTag(value := recipe.uniqueId.toString),
       recipe.name
     ),
-    td(recipe.createdBy)
+    td(recipe.createdBy),
+    td(className := "ellipsis-td", title := recipe.tags.mkString(", "), recipe.tags.mkString(", "))
   )
 
   def apply(recipes: Vector[RecipeSummary]): ReactiveHtmlElement[html.Div] = {

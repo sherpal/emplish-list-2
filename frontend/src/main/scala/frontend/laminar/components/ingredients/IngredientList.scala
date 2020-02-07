@@ -17,12 +17,16 @@ private[ingredients] object IngredientList {
   private def row(ingredient: Ingredient) = tr(
     td(
       className := "clickable",
-      onClick.mapTo(ingredient.id) --> (id => Router.router.moveTo(
-        "/" + (root / "update-ingredient" / segment[Int]).createPath(id)
-        )),
+      onClick.mapTo(ingredient.id) --> (
+          id =>
+            Router.router.moveTo(
+              "/" + (root / "update-ingredient" / segment[Int]).createPath(id)
+            )
+        ),
       ingredient.name
-      ),
+    ),
     td(ingredient.unit.name),
+    td(className := "ellipsis-td", title := ingredient.tags.mkString(", "), ingredient.tags.mkString(", ")),
     td(
       span(
         title := "Add to basket",
@@ -36,7 +40,7 @@ private[ingredients] object IngredientList {
   def apply(ingredients: Vector[Ingredient]): ReactiveHtmlElement[html.Element] = {
 
     val tagsFilter = new EventBus[List[String]]()
-    val $tags = tagsFilter.events.fold(List[String]())((_, ls) => ls)
+    val $tags = tagsFilter.events.startWith(Nil)
     val $rows = $tags.map { tags =>
       ingredients.filter(ingredient => tags.forall(ingredient.tags.contains))
     }.map(_.take(100)).map(_.map(row))
@@ -53,7 +57,8 @@ private[ingredients] object IngredientList {
       table(
         thead(
           th("Name"),
-          th("Unit")
+          th("Unit"),
+          th("tags")
         ),
         tbody(
           children <-- $rows
