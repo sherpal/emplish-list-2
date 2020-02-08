@@ -82,8 +82,8 @@ trait Ingredients extends MonixDB with Stores {
             .seq(
               query
                 .filter(_.id === ingredient.id)
-                .map(i => (i.unitName, i.tags))
-                .update((ingredient.unit.name, ingredient.toDBIngredient.tagsAsString)),
+                .map(i => (i.name, i.unitName, i.tags))
+                .update((ingredient.name, ingredient.unit.name, ingredient.toDBIngredient.tagsAsString)),
               IngredientsInStoresTable.query.filter(_.ingredientId === ingredient.id).delete,
               IngredientsInStoresTable.query ++= ingredient.ingredientsInStore
             )
