@@ -1,4 +1,4 @@
-package streams.laminar
+package streams.laminar.streams.operators
 
 import com.raquo.airstream.eventstream.EventStream
 import com.raquo.airstream.signal.Signal

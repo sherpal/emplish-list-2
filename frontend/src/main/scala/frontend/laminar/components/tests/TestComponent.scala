@@ -5,7 +5,7 @@ import com.raquo.laminar.nodes.ReactiveHtmlElement
 import frontend.laminar.components.Component
 import org.scalajs.dom
 import org.scalajs.dom.html.Div
-import streams.laminar.CombineLatest
+import streams.laminar.streams.operators.CombineLatest
 
 final class TestComponent private () extends Component[dom.html.Div] {
   val element: ReactiveHtmlElement[Div] = {
