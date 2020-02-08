@@ -19,28 +19,35 @@ object App {
 
   private def r = root
 
-  private val mainBoardRoutes = r / oneOf(
-    "home",
-    "ingredients",
-    "new-ingredient",
-    "update-ingredient",
-    "recipes",
-    "basket",
-    "handle-registration",
-    "view-users"
-  )
+  object RouteDefinitions {
+    final val mainBoardRoutes = r / oneOf(
+      "home",
+      "ingredients",
+      "new-ingredient",
+      "update-ingredient",
+      "recipes",
+      "basket",
+      "handle-registration",
+      "view-users"
+    )
 
-  private val testRoute = (r / "test").filter(_ => scala.scalajs.LinkingInfo.developmentMode)
+    final val loginRoute = r / "login"
+    final val signUpRoute = r / "sign-up"
+    final val afterRegisterRoute = r / "after-registration"
+    final val testRoute = (r / "test").filter(_ => scala.scalajs.LinkingInfo.developmentMode)
+  }
+
+  import RouteDefinitions._
 
   def apply(): ReactiveHtmlElement[html.Div] = div(
     Fixes.readMountEvents,
     child <-- Routes
       .firstOf(
-        Route(r / endOfSegments, () => Redirect(r / "home")),
+        Route(r / endOfSegments, () => Redirect(mainBoardRoutes)),
         Route(mainBoardRoutes, () => MainBoard()),
-        Route(r / "login", () => Login()),
-        Route(r / "sign-up", () => Register()),
-        Route(r / "after-registration", () => AfterRegister()),
+        Route(loginRoute, () => Login()),
+        Route(signUpRoute, () => Register()),
+        Route(afterRegisterRoute, () => AfterRegister()),
         Route(testRoute, () => TestComponent())
       )
       .map {

@@ -33,7 +33,6 @@ object Main {
   }
 
   def render(container: dom.Element): IO[ReactiveRoot] = IO {
-    //ReactDOM.render(App(), container)
     com.raquo.laminar.api.L.render(container, laminar.components.App())
   }
 
