@@ -25,6 +25,9 @@ object CombineLatest {
       .changes
       .collect { case (Some(left), Some(right)) => (left, right) }
 
+  /**
+    * Combines two signals into a Signals of pairs
+    */
   def apply[L, R](left$ : Signal[L], right$ : Signal[R], startLeft: => L, startRight: => R): Signal[(L, R)] =
     EventStream
       .merge(left$.changes.map(Left[L, R]), right$.changes.map(Right[L, R]))

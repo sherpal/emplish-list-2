@@ -10,17 +10,30 @@ import streams.laminar.CombineLatest
 final class TestComponent private () extends Component[dom.html.Div] {
   val element: ReactiveHtmlElement[Div] = {
 
-    val left = new EventBus[String]()
-    val right = new EventBus[String]()
-
     div(
-      h1("This is the test!"),
-      section(
-        h2("Combine Latest"),
-        input(inContext(elem => onInput.mapTo(elem.ref.value) --> left.writer)),
-        input(inContext(elem => onInput.mapTo(elem.ref.value) --> right.writer)),
-        child <-- CombineLatest(left.events, right.events).map(_.toString).map(span(_))
-      )
+      h1("This is the test!"), {
+        val left = new EventBus[String]()
+        val right = new EventBus[String]()
+
+        section(
+          h2("Combine Latest"),
+          input(inContext(elem => onInput.mapTo(elem.ref.value) --> left.writer)),
+          input(inContext(elem => onInput.mapTo(elem.ref.value) --> right.writer)),
+          child <-- CombineLatest(left.events, right.events).map(_.toString).map(span(_))
+        )
+      }, {
+        val left = Var("left")
+        val right = Var("right")
+
+        val combined = CombineLatest(left.signal, right.signal, left.now, right.now)
+
+        section(
+          h2("Combine latest for signals"),
+          input(value <-- combined.map(_._1), inContext(elem => onInput.mapTo(elem.ref.value) --> left.writer)),
+          input(value <-- combined.map(_._2), inContext(elem => onInput.mapTo(elem.ref.value) --> right.writer)),
+          child <-- combined.map(_.toString)
+        )
+      }
     )
   }
 }

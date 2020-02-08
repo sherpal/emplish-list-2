@@ -16,7 +16,8 @@ object Navigation {
       li(Link(Recipes.topLevelPath)("Recipes")),
       li(Link(root / "basket")("Create list")),
       Some(li(Link(root / "handle-registration")("Registration"))).filter(_ => amIAdmin),
-      Some(li(Link(root / "view-users")("Users"))).filter(_ => amIAdmin)
+      Some(li(Link(root / "view-users")("Users"))).filter(_ => amIAdmin),
+      Some(li(Link(root / "test")("Test"))).filter(_ => scala.scalajs.LinkingInfo.developmentMode)
     )
   )
 
