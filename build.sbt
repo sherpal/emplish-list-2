@@ -32,6 +32,7 @@ lazy val sharedJS = `shared`.js
 /** Backend server uses Play framework */
 lazy val `backend` = (project in file("./backend"))
   .enablePlugins(PlayScala)
+  .enablePlugins(SwaggerPlugin)
   .settings(
     BackendSettings(),
     libraryDependencies += guice,
@@ -46,7 +47,9 @@ lazy val `backend` = (project in file("./backend"))
       "backend/conf/application.conf",
       "backend/public"
     ),
-    herokuSkipSubProjects in Compile := false
+    herokuSkipSubProjects in Compile := false,
+    swaggerDomainNameSpaces := Seq("models.emplishlist"),
+    libraryDependencies += "org.webjars" % "swagger-ui" % "2.2.0"
   )
   .dependsOn(sharedJVM)
 

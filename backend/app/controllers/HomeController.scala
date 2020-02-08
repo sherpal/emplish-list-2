@@ -30,6 +30,10 @@ final class HomeController @Inject()(
   def assetOrDefault(resource: String): Action[AnyContent] = {
     if (resource.startsWith(config.get[String]("apiPrefix"))) {
       Action.async(r => errorHandler.onClientError(r, NOT_FOUND, "Not found"))
+    } else if (resource == "assets/swagger.json") {
+      println("hello")
+      println(resource)
+      assets.versioned("/public/swagger.json")
     } else {
       if (resource.contains(".")) assets.at(resource) else index
     }

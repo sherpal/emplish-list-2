@@ -4,6 +4,7 @@
 # ~~~~
 
 # An example controller showing a sample home page
+### NoDocs ###
 GET     /                               controllers.HomeController.index
 GET     /api/hello                      controllers.HomeController.hello
 POST    /api/hello/:nbr                 controllers.HomeController.helloNbr(nbr: Int)
@@ -25,11 +26,30 @@ GET     /api/registration/pending-registrations             controllers.UsersCon
 GET     /api/registration/pending-registrations/:limit      controllers.UsersController.downloadPendingRegistrations(limit: Int)
 
 # Ingredients
+
+###
+#  summary: Retrieve all ingredients
+#  tags:
+#    - Ingredient Endpoints
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        type: "array"
+#        items:
+#          $ref: '#/definitions/models.emplishlist.Ingredient'
+###
 GET     /api/ingredients/ingredients                controllers.IngredientsController.allIngredients
 GET     /api/ingredients/get-ingredient             controllers.IngredientsController.fetchIngredient(id: Int)
 GET     /api/ingredients/units                      controllers.IngredientsController.allUnits
 GET     /api/ingredients/stores                     controllers.IngredientsController.allStores
 GET     /api/ingredients/tags                       controllers.IngredientsController.tags
+###
+#  parameters:
+#    - name: body
+#      schema:
+#        $ref: '#/definitions/models.emplishlist.Ingredient'
+###
 POST    /api/ingredients/add-ingredient             controllers.IngredientsController.newIngredient
 POST    /api/ingredients/update-ingredient          controllers.IngredientsController.updateIngredientRoute
 
@@ -40,7 +60,12 @@ GET     /api/recipes/get                            controllers.RecipesControlle
 POST    /api/recipes/new-recipe                     controllers.RecipesController.addRecipe
 POST    /api/recipes/update-recipe                  controllers.RecipesController.updateRecipe
 
+### NoDocs ###
+GET   /docs/swagger-ui/*file        controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
+
 # Map static resources from the /public folder to the /assets URL path
-# GET   /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+### NoDocs ###
+GET   /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 # Serve static assets under public directory. KEEP THIS ROUTE AT THE END OF THIS FILE.
+### NoDocs ###
 GET     /*file                      controllers.HomeController.assetOrDefault(file)
