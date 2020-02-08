@@ -20,7 +20,8 @@ object BackendSettings {
       "org.mindrot" % "jbcrypt" % "0.3m",
       // sending emails
       "javax.mail" % "mail" % "1.4.7",
-      "org.postgresql" % "postgresql" % "42.2.5"
+      "org.postgresql" % "postgresql" % "42.2.5",
+      "com.lihaoyi" %% "os-lib" % "0.6.2"
     )
     // https://www.playframework.com/documentation/2.7.x/SBTCookbook
     //PlayKeys.playRunHooks += baseDirectory.map(FrontendHook.apply).value

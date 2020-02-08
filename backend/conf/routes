@@ -40,17 +40,81 @@ GET     /api/registration/pending-registrations/:limit      controllers.UsersCon
 #          $ref: '#/definitions/models.emplishlist.Ingredient'
 ###
 GET     /api/ingredients/ingredients                controllers.IngredientsController.allIngredients
+###
+#  summary: Retrieve ingredient by id
+#  tags:
+#    - Ingredient Endpoints
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        $ref: '#/definitions/models.emplishlist.Ingredient'
+###
 GET     /api/ingredients/get-ingredient             controllers.IngredientsController.fetchIngredient(id: Int)
+###
+#  summary: Retrieve all ingredient units
+#  tags:
+#    - Ingredient Endpoints
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        $ref: '#/definitions/models.emplishlist.IngredientUnit'
+###
 GET     /api/ingredients/units                      controllers.IngredientsController.allUnits
+###
+#  summary: Retrieve all ingredient stores
+#  tags:
+#    - Ingredient Endpoints
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        $ref: '#/definitions/models.emplishlist.Store'
+###
 GET     /api/ingredients/stores                     controllers.IngredientsController.allStores
+###
+#  summary: Retrieve all ingredient stores
+#  tags:
+#    - Ingredient Endpoints
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        type: "array"
+#        items:
+#          "string"
+###
 GET     /api/ingredients/tags                       controllers.IngredientsController.tags
 ###
+#  summary: Adds the given ingredient to the list
+#  tags:
+#    - Ingredient Endpoints
 #  parameters:
 #    - name: body
 #      schema:
 #        $ref: '#/definitions/models.emplishlist.Ingredient'
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        $ref: '#/definitions/models.emplishlist.Ingredient'
 ###
 POST    /api/ingredients/add-ingredient             controllers.IngredientsController.newIngredient
+###
+#  summary: Updates the given ingredient to the list
+#  tags:
+#    - Ingredient Endpoints
+#  parameters:
+#    - name: body
+#      schema:
+#        $ref: '#/definitions/models.emplishlist.Ingredient'
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        $ref: '#/definitions/models.emplishlist.Ingredient'
+###
 POST    /api/ingredients/update-ingredient          controllers.IngredientsController.updateIngredientRoute
 
 # Recipes
@@ -61,11 +125,11 @@ POST    /api/recipes/new-recipe                     controllers.RecipesControlle
 POST    /api/recipes/update-recipe                  controllers.RecipesController.updateRecipe
 
 ### NoDocs ###
-GET   /docs/swagger-ui/*file        controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
+GET   /docs/swagger-ui/*file        controllers.HomeController.swagger(path:String="/public/lib/swagger-ui", file:String)
 
 # Map static resources from the /public folder to the /assets URL path
 ### NoDocs ###
-GET   /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+#GET   /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 # Serve static assets under public directory. KEEP THIS ROUTE AT THE END OF THIS FILE.
 ### NoDocs ###
 GET     /*file                      controllers.HomeController.assetOrDefault(file)

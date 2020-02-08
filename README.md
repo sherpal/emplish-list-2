@@ -21,3 +21,8 @@ Heroku (using the command `heroku login`), simply type in:
 export SBT_OPTS="-Xmx6G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=6G -Xss2M  -Duser.timezone=GMT"
 sbt clean stage backend/deployHeroku
 ```
+
+To see the files on the deployed server:
+```
+heroku run bash --app APPNAME
+```

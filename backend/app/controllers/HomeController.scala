@@ -22,7 +22,8 @@ final class HomeController @Inject()(
     authGuard: FullAuthGuardFactory,
     protected val dbConfigProvider: DatabaseConfigProvider,
     cc: ControllerComponents,
-    val ec: ExecutionContext
+    val ec: ExecutionContext,
+    finder: AssetsFinder
 ) extends AbstractController(cc) {
 
   def index: Action[AnyContent] = assets.at("index.html")
@@ -31,12 +32,14 @@ final class HomeController @Inject()(
     if (resource.startsWith(config.get[String]("apiPrefix"))) {
       Action.async(r => errorHandler.onClientError(r, NOT_FOUND, "Not found"))
     } else if (resource == "assets/swagger.json") {
-      println("hello")
-      println(resource)
-      assets.versioned("/public/swagger.json")
+      assets.versioned("/public", Assets.Asset("swagger.json"))
     } else {
       if (resource.contains(".")) assets.at(resource) else index
     }
+  }
+
+  def swagger(path: String, file: String): Action[AnyContent] = authGuard.admin.async { request =>
+    assets.at(path, file)(request)
   }
 
   def hello(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
