@@ -7,10 +7,13 @@ import org.scalajs.dom.html.UList
 
 object RecipeIngredientsDisplay {
 
+  private def round(x: Double, digit: Int = 2): Double =
+    BigDecimal(x).setScale(digit, BigDecimal.RoundingMode.HALF_UP).toDouble
+
   def apply(ingredientQuantities: Observable[List[IngredientQuantity]]): ReactiveElement[UList] = ul(
     children <-- ingredientQuantities.map(_.map {
       case IngredientQuantity(ingredient, amount) =>
-        li(s"${ingredient.name} ($amount ${ingredient.unit.name})")
+        li(s"${ingredient.name} (${round(amount)} ${ingredient.unit.name})")
     })
   )
 
