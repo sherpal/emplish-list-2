@@ -118,10 +118,72 @@ POST    /api/ingredients/add-ingredient             controllers.IngredientsContr
 POST    /api/ingredients/update-ingredient          controllers.IngredientsController.updateIngredientRoute
 
 # Recipes
+###
+#  summary: Retrieve all recipes
+#  tags:
+#    - Recipe Endpoints
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        type: "array"
+#        items:
+#          $ref: '#/definitions/models.emplishlist.Recipe'
+###
 GET     /api/recipes/recipes                        controllers.RecipesController.fetchAllRecipes
+###
+#  summary: Retrieve all recipes with minimal info
+#  tags:
+#    - Recipe Endpoints
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        type: "array"
+#        items:
+#          $ref: '#/definitions/models.emplishlist.db.DBRecipe'
+###
 GET     /api/recipes/db-recipes                     controllers.RecipesController.fetchAllDBRecipes
+###
+#  summary: Retrieve the recipe with specified id
+#  tags:
+#    - Recipe Endpoints
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        $ref: '#/definitions/models.emplishlist.Recipe'
+###
 GET     /api/recipes/get                            controllers.RecipesController.fetchRecipeById(recipeId: Int)
+###
+#  summary: Adds the given recipe
+#  tags:
+#    - Recipe Endpoints
+#  parameters:
+#    - name: body
+#      schema:
+#        $ref: '#/definitions/models.emplishlist.Recipe'
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        $ref: '#/definitions/models.emplishlist.Recipe'
+###
 POST    /api/recipes/new-recipe                     controllers.RecipesController.addRecipe
+###
+#  summary: Updates the given recipe
+#  tags:
+#    - Recipe Endpoints
+#  parameters:
+#    - name: body
+#      schema:
+#        $ref: '#/definitions/models.emplishlist.Recipe'
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        $ref: '#/definitions/models.emplishlist.Recipe'
+###
 POST    /api/recipes/update-recipe                  controllers.RecipesController.updateRecipe
 
 ### NoDocs ###
