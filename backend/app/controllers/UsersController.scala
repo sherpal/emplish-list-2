@@ -13,6 +13,7 @@ import play.api.Configuration
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.http.HttpErrorHandler
 import play.api.mvc._
+import play.filters.csrf.CSRFAddToken
 import slick.jdbc.JdbcProfile
 import utils.ReadsImplicits._
 import utils.WriteableImplicits._
@@ -22,6 +23,8 @@ import utils.database.tables.UsersTable.{Password, UserName}
 import utils.mail.InviteEmails
 import utils.monix.Implicits._
 import utils.monix.SchedulerProvider
+import play.filters.csrf._
+import play.filters.csrf.CSRF.Token
 
 import scala.concurrent.{ExecutionContext, Future}
 

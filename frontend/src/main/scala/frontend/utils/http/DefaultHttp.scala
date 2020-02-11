@@ -7,6 +7,7 @@ import models.errors.BackendError
 import org.scalajs.dom.document
 import sttp.client._
 import sttp.model.{MediaType, MultiQueryParams, Uri}
+import org.scalajs.dom
 
 import scala.concurrent.Future
 
@@ -14,8 +15,19 @@ object DefaultHttp extends Http {
 
   implicit val backend: SttpBackend[Future, Nothing, NothingT] = FetchBackend()
 
+  def maybeCsrfToken: Option[String] = {
+    println(dom.document.cookie)
+    dom.document.cookie
+      .split(";")
+      .map(_.trim)
+      .map(_.split("=").map(_.trim))
+      .filter(_.nonEmpty)
+      .find(_(0) == "Csrf-Token")
+      .map(_(1))
+  }
+
   def boilerplate: RequestT[Empty, Either[String, String], Nothing] =
-    basicRequest.header("Csrf-Token", "nocheck")
+    basicRequest.header("Csrf-Token", maybeCsrfToken.getOrElse("none"))
 
   def host: Uri = Uri.parse(document.location.origin.toString).right.get //uri"http://localhost:8080"
 
