@@ -15,16 +15,14 @@ object DefaultHttp extends Http {
 
   implicit val backend: SttpBackend[Future, Nothing, NothingT] = FetchBackend()
 
-  def maybeCsrfToken: Option[String] = {
-    println(dom.document.cookie)
+  final val csrfTokenName = "Csrf-Token"
+
+  def maybeCsrfToken: Option[String] =
     dom.document.cookie
       .split(";")
       .map(_.trim)
-      .map(_.split("=").map(_.trim))
-      .filter(_.nonEmpty)
-      .find(_(0) == "Csrf-Token")
-      .map(_(1))
-  }
+      .find(_.startsWith(s"$csrfTokenName="))
+      .map(_.drop(csrfTokenName.length + 1))
 
   def boilerplate: RequestT[Empty, Either[String, String], Nothing] =
     basicRequest.header("Csrf-Token", maybeCsrfToken.getOrElse("none"))
