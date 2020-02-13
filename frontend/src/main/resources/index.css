@@ -82,4 +82,8 @@ fieldset {
 tr:hover {
   background-color: rgba(0, 0, 0, 0.3); }
 
+textarea {
+  width: 800px;
+  height: 200px; }
+
 /*# sourceMappingURL=index.css.map */
