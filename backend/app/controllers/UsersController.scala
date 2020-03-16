@@ -13,18 +13,15 @@ import play.api.Configuration
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.http.HttpErrorHandler
 import play.api.mvc._
-import play.filters.csrf.CSRFAddToken
 import slick.jdbc.JdbcProfile
 import utils.ReadsImplicits._
 import utils.WriteableImplicits._
-import utils.config.ConfigRequester.|>
 import utils.database.tables.UsersTable
 import utils.database.tables.UsersTable.{Password, UserName}
 import utils.mail.InviteEmails
-import utils.monix.Implicits._
 import utils.monix.SchedulerProvider
-import play.filters.csrf._
-import play.filters.csrf.CSRF.Token
+import utils.playzio.PlayZIO._
+import zio.ZIO
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -43,28 +40,31 @@ final class UsersController @Inject()(
     with Registration
     with InviteEmails {
 
-  private def adminName = (|> >> "adminUser" >> "name").into[String]
+  private val usersLayer =
+    utils.config.Configuration.live ++ (models.database.dbProvider(db) >>> Users.live)
 
   def user: Action[AnyContent] = authGuard() { implicit request: UserAction.SessionRequest[AnyContent] =>
     Ok(User(request.userId, request.userName))
   }
 
-  def login: Action[LoginUser] = Action.async(parse.json[LoginUser]) { implicit request: Request[LoginUser] =>
-    val user = request.body
-    correctPassword(user.name, user.password).map {
-      case Some(DBUser(id, _, _)) =>
-        Ok.withSession(
-          models.Global.USER_ID -> id,
-          models.Global.TIMESTAMP -> utils.time.Time.epochSecond.toString,
-          models.Global.USER_NAME -> user.name
-        )
-      case None => BadRequest
-    }.runToFuture
+  def login: Action[LoginUser] = Action.zio(parse.json[LoginUser]) { request =>
+    (for {
+      user <- ZIO.succeed(request.body)
+      maybeDBUser <- Users.correctPassword(user.name, user.password)
+      result = maybeDBUser match {
+        case Some(DBUser(id, _, _)) =>
+          Ok.withSession(
+            models.Global.USER_ID -> id,
+            models.Global.TIMESTAMP -> utils.time.Time.epochSecond.toString,
+            models.Global.USER_NAME -> user.name
+          )
+        case None => BadRequest
+      }
+
+    } yield result).orDie.provideLayer(usersLayer)
   }
 
-  def logout: Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    Ok.withNewSession
-  }
+  def logout: Action[AnyContent] = Action { Ok.withNewSession }
 
   def register: Action[NewUser] = Action.async(parse.json[NewUser]) { implicit request: Request[NewUser] =>
     NewUser.fieldsValidator.validate(request.body) match {
@@ -95,14 +95,17 @@ final class UsersController @Inject()(
     pendingRegistrations(limit).map(Ok(_)).runToFuture
   }
 
-  def resetPassword(userName: UserName): Action[AnyContent] = authGuard().async {
-    implicit request: Request[AnyContent] =>
-      changePassword(userName, "").runToResult
+  def resetPassword(userName: UserName): Action[AnyContent] = authGuard().zio { implicit request: Request[AnyContent] =>
+    Users.changePassword(userName, "").orDie.map(Ok(_)).provideLayer(usersLayer)
   }
 
-  def changePW(newPassword: Password): Action[AnyContent] = authGuard().async {
+  def changePW(newPassword: Password): Action[AnyContent] = authGuard().zio {
     implicit request: UserAction.SessionRequest[AnyContent] =>
-      changePassword(request.userName, newPassword).runToResult
+      Users
+        .changePassword(request.userName, newPassword)
+        .orDie
+        .provideLayer(usersLayer)
+        .map(Ok(_))
   }
 
   def amIAdmin: Action[AnyContent] = authGuard.admin(_ => Ok)
@@ -115,9 +118,9 @@ final class UsersController @Inject()(
       }.runToFuture
   }
 
-  def usersNames: Action[AnyContent] = authGuard.admin.async { implicit request =>
-    users.map(_.map(_.name)).map(Ok(_)).runToFuture
-  }
+  def usersNames: Action[AnyContent] = authGuard.admin.zio(
+    Users.users.provideLayer(usersLayer).map(_.map(_.name)).orDie.map(Ok(_))
+  )
 
   def addPreRegisteredUser(userName: UserName, randomKey: String): Action[AnyContent] = authGuard.admin.async {
     implicit request =>
@@ -142,9 +145,8 @@ final class UsersController @Inject()(
       rejectUser(userName, randomKey).map(Ok(_)).runToFuture
   }
 
-  def deleteUserRoute(userName: UserName): Action[AnyContent] = authGuard.admin.async {
-    if (userName == adminName) Future.successful(BadRequest("You may not delete the boss!"))
-    else deleteUser(userName).map(Ok(_)).runToFuture
+  def deleteUserRoute(userName: UserName): Action[AnyContent] = authGuard.admin.zio {
+    Users.deleteNonAdminUser(userName).orDie.map(Ok(_)).provideLayer(usersLayer)
   }
 
 }

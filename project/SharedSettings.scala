@@ -12,7 +12,8 @@ object SharedSettings {
       "com.softwaremill.sttp.client" %%% "core" % "2.0.0-RC1",
       "org.typelevel" %%% "cats-core" % "2.0.0",
       "be.doeraene" %%% "url-dsl" % "0.1.4",
-      "org.scalatest" %%% "scalatest" % "3.1.0" % "test"
+      "org.scalatest" %%% "scalatest" % "3.1.0" % "test",
+      "dev.zio" %%% "zio" % "1.0.0-RC18-1"
     ) ++ Seq(
       "io.circe" %%% "circe-core",
       "io.circe" %%% "circe-generic",

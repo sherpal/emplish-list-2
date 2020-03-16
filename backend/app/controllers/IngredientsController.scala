@@ -13,10 +13,14 @@ import play.api.Configuration
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.http.HttpErrorHandler
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
-import slick.jdbc.JdbcProfile
+import slick.jdbc.{JdbcBackend, JdbcProfile}
 import utils.ReadsImplicits._
 import utils.WriteableImplicits._
 import utils.monix.SchedulerProvider
+import models.database.dbProvider
+import utils.playzio.PlayZIO._
+import zio.{Has, ZLayer}
+import zio.ZLayer.NoDeps
 
 import scala.concurrent.ExecutionContext
 
@@ -34,13 +38,17 @@ final class IngredientsController @Inject()(
     with Ingredients
     with Units {
 
+  val dbLayer: NoDeps[Nothing, Has[JdbcBackend#DatabaseDef]] = dbProvider(db)
+  val unitsLayer: ZLayer[Any, Nothing, Has[Units.Service]] = dbLayer >>> Units.liveUnits
+
   def allIngredients: Action[AnyContent] = authGuard().async {
     ingredients.map(Ok(_)).runToFuture
   }
 
-  def allUnits: Action[AnyContent] = authGuard().async {
-    units.map(Ok(_)).runToFuture
-  }
+//  def allUnits: Action[AnyContent] = authGuard().async {
+//    units.map(Ok(_)).runToFuture
+//  }
+  def allUnits: Action[AnyContent] = authGuard().zio(Units.units.orDie.map(Ok(_)).provideLayer(unitsLayer))
 
   def allStores: Action[AnyContent] = authGuard().async {
     stores.map(Ok(_)).runToFuture

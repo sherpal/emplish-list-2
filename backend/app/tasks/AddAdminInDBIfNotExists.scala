@@ -7,10 +7,10 @@ import play.api.Logger
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
 import utils.monix.SchedulerProvider
+import zio.Runtime
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
-import scala.util.{Failure, Success}
 
 /**
   * This task will be launched at the start of play to add the admin user if it is not yet in the database.
@@ -20,7 +20,6 @@ final class AddAdminInDBIfNotExists @Inject()(
     actorSystem: ActorSystem,
     executionContext: ExecutionContext
 ) extends SchedulerProvider
-    with Users
     with HasDatabaseConfigProvider[JdbcProfile] {
 
   val ec: ExecutionContext = executionContext
@@ -29,12 +28,12 @@ final class AddAdminInDBIfNotExists @Inject()(
 
   actorSystem.scheduler.scheduleOnce(delay = 3.seconds) {
 
-    registerAdminIfNotExist.runToFuture
-      .onComplete {
-        case Success(_) =>
-          log.info("Admin user set up successfully.")
-        case Failure(exception) => throw exception
-      }
+    Runtime.default.unsafeRun(
+      Users.registerAdminIfNotExist.orDie
+        .map(_ => log.info("Admin user set up successfully"))
+        .provideLayer(utils.config.Configuration.live ++ (models.database.dbProvider(db) >>> Users.live))
+    )
+
   }
 
 }
