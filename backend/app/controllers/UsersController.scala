@@ -20,6 +20,7 @@ import utils.database.tables.UsersTable
 import utils.database.tables.UsersTable.{Password, UserName}
 import utils.mail.InviteEmails
 import utils.monix.SchedulerProvider
+import utils.playzio.PlayZIO
 import utils.playzio.PlayZIO._
 import zio.ZIO
 
@@ -47,8 +48,9 @@ final class UsersController @Inject()(
     Ok(User(request.userId, request.userName))
   }
 
-  def login: Action[LoginUser] = Action.zio(parse.json[LoginUser]) { request =>
+  def login: Action[LoginUser] = Action.zio(parse.json[LoginUser]) {
     (for {
+      request <- PlayZIO.request[Request, LoginUser]
       user <- ZIO.succeed(request.body)
       maybeDBUser <- Users.correctPassword(user.name, user.password)
       result = maybeDBUser match {
@@ -61,7 +63,7 @@ final class UsersController @Inject()(
         case None => BadRequest
       }
 
-    } yield result).orDie.provideLayer(usersLayer)
+    } yield result).orDie.provideSomeLayer[PlayZIO.ZIORequest[LoginUser]](usersLayer)
   }
 
   def logout: Action[AnyContent] = Action { Ok.withNewSession }
@@ -95,17 +97,21 @@ final class UsersController @Inject()(
     pendingRegistrations(limit).map(Ok(_)).runToFuture
   }
 
-  def resetPassword(userName: UserName): Action[AnyContent] = authGuard().zio { implicit request: Request[AnyContent] =>
+  def resetPassword(userName: UserName): Action[AnyContent] = authGuard().zio {
     Users.changePassword(userName, "").orDie.map(Ok(_)).provideLayer(usersLayer)
   }
 
   def changePW(newPassword: Password): Action[AnyContent] = authGuard().zio {
-    implicit request: UserAction.SessionRequest[AnyContent] =>
-      Users
-        .changePassword(request.userName, newPassword)
-        .orDie
-        .provideLayer(usersLayer)
-        .map(Ok(_))
+    PlayZIO
+      .request[UserAction.SessionRequest, AnyContent]
+      .flatMap(
+        request =>
+          Users
+            .changePassword(request.userName, newPassword)
+      )
+      .orDie
+      .provideSomeLayer[PlayZIO.ZIOAnyContent[UserAction.SessionRequest]](usersLayer)
+      .map(Ok(_))
   }
 
   def amIAdmin: Action[AnyContent] = authGuard.admin(_ => Ok)
